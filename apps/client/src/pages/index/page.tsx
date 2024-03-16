@@ -1,18 +1,17 @@
-import { Outlet } from 'react-router-dom';
 import styles from './style.module.css';
+import { NavBar } from '../../components/NavBar';
 
 export default function Homepage() {
   return (
     <>
-      <nav className={styles.navbar}>
-        <ul>
-          <span className={styles.logo}>
-            <span>💸</span> Follow The Money
-          </span>
-        </ul>
-      </nav>
+      <NavBar />
       <main className={styles.content}>
-        <Outlet />
+        <div className={styles.hero}>
+          <h1>
+            <span>💸</span> Follow The Money
+          </h1>
+          <p>Find out which CMS are used in the german public sector.</p>
+        </div>
       </main>
     </>
   );
