@@ -4,3 +4,7 @@
 .nx/deps/*
 .DS_Store
 **/venv/*
+
+
+package-lock.json
+pnpm-lock.json
