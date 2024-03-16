@@ -29,3 +29,11 @@
 .logo > span {
   font-size: 1.5rem;
 }
+
+.links {
+  margin-left: auto;
+}
+
+.links > a:hover {
+  text-decoration: underline;
+}
