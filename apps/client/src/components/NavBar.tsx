@@ -1,4 +1,4 @@
-import styles from './NavBar.module.css';
+import styles from "./NavBar.module.css";
 
 export const NavBar = () => (
   <nav className={styles.navbar}>

@@ -4,11 +4,11 @@ import styles from "./style.module.css";
 
 export default function MainLayout() {
   return (
-    <>
+    <div>
       <NavBar />
-      <div className={styles.containt}>
+      <main className={styles.containt}>
         <Outlet />
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
