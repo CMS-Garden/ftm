@@ -5,6 +5,8 @@
 .DS_Store
 **/venv/*
 
+.env
+
 
 package-lock.json
 pnpm-lock.json
