@@ -16,38 +16,38 @@ export default function Map() {
           {
             data: [
               {
-                key: 'april - march',
+                key: "april - march",
                 value: 50000,
               },
             ],
-            name: 'Shopify Payments',
+            name: "Shopify Payments",
           },
           {
             data: [
               {
-                key: 'april - march',
+                key: "april - march",
                 value: 25000,
               },
             ],
-            name: 'Paypal',
+            name: "Paypal",
           },
           {
             data: [
               {
-                key: 'april - march',
+                key: "april - march",
                 value: 10000,
               },
             ],
-            name: 'Other',
+            name: "Other",
           },
           {
             data: [
               {
-                key: 'april - march',
+                key: "april - march",
                 value: 4000,
               },
             ],
-            name: 'Amazon Pay',
+            name: "Amazon Pay",
           },
         ]}
       />
