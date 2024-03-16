@@ -1,5 +1,7 @@
 import { DonutChart } from '@shopify/polaris-viz';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import styles from './style.module.css';
+import geoUrl from '../../assets/germany.geo.json?url';
 
 export default function Map() {
   return (
@@ -45,6 +47,16 @@ export default function Map() {
           },
         ]}
       />
+      <hr />
+      <ComposableMap className={styles.map}>
+        <Geographies geography={geoUrl}>
+          {({ geographies }) =>
+            geographies.map((geo) => (
+              <Geography key={geo.rsmKey} geography={geo} />
+            ))
+          }
+        </Geographies>
+      </ComposableMap>
     </div>
   );
 }

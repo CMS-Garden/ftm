@@ -9,6 +9,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.11.2",
+    "react-simple-maps": "^3.0.0",
     "the-new-css-reset": "^1.11.2"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@types/node": "18.16.9",
     "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
+    "@types/react-simple-maps": "^3.0.4",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "@vitejs/plugin-react": "^4.2.0",
