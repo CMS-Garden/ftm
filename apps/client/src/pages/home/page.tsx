@@ -1,6 +1,86 @@
-import styles from "./style.module.css";
+import styles from './style.module.css';
+import { useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
 
 export default function Homepage() {
+  const [search, setSearch] = useState('');
+
+  const [rowData, setRowData] = useState([
+    {
+      city: 'Berlin',
+      state: 'Berlin',
+      country: 'Germany',
+      website: 'https://www.berlin.de/',
+    },
+    {
+      city: 'Hamburg',
+      state: 'Hamburg',
+      country: 'Germany',
+      website: 'https://www.hamburg.de/',
+    },
+    {
+      city: 'Munich',
+      state: 'Bavaria',
+      country: 'Germany',
+      website: 'https://www.muenchen.de/',
+    },
+    {
+      city: 'Cologne',
+      state: 'North Rhine-Westphalia',
+      country: 'Germany',
+      website: 'https://www.stadt-koeln.de/',
+    },
+    {
+      city: 'Frankfurt',
+      state: 'Hesse',
+      country: 'Germany',
+      website: 'https://www.frankfurt.de/',
+    },
+    {
+      city: 'Stuttgart',
+      state: 'Baden-Württemberg',
+      country: 'Germany',
+      website: 'https://www.stuttgart.de/',
+    },
+    {
+      city: 'Düsseldorf',
+      state: 'North Rhine-Westphalia',
+      country: 'Germany',
+      website: 'https://www.duesseldorf.de/',
+    },
+    {
+      city: 'Dortmund',
+      state: 'North Rhine-Westphalia',
+      country: 'Germany',
+      website: 'https://www.dortmund.de/',
+    },
+    {
+      city: 'Essen',
+      state: 'North Rhine-Westphalia',
+      country: 'Germany',
+      website: 'https://www.essen.de/',
+    },
+    {
+      city: 'Leipzig',
+      state: 'Saxony',
+      country: 'Germany',
+      website: 'https://www.leipzig.de/',
+    },
+    {
+      city: 'Bremen',
+      state: 'Bremen',
+      country: 'Germany',
+      website: 'https://www.bremen.de/',
+    },
+  ]);
+
+  const [colDefs, setColDefs] = useState([
+    { field: 'city' },
+    { field: 'state' },
+    { field: 'country' },
+    { field: 'website' },
+  ]);
+
   return (
     <>
       <div className={styles.content}>
@@ -8,7 +88,21 @@ export default function Homepage() {
           <h1>
             <span>💸</span> Follow The Money
           </h1>
-          <p>Find out which CMS are used in the german public sector.</p>
+        </div>
+        <input
+          className={styles.search}
+          type="text"
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className={styles.table}>
+          <AgGridReact
+            rowData={rowData}
+            columnDefs={colDefs}
+            className="ag-theme-quartz"
+            quickFilterText={search}
+          />
         </div>
       </div>
     </>
