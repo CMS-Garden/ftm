@@ -6,7 +6,9 @@ export const NavBar = () => (
       <span className={styles.logo}>
         <span>💸</span> Follow The Money
       </span>
-      <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
+      <div className={styles.links}>
+        <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
+      </div>
     </ul>
   </nav>
 );
