@@ -1,0 +1,6 @@
+**/dist/*
+**/node_modules/*
+.nx/cache/*
+.nx/deps/*
+.DS_Store
+**/venv/*
