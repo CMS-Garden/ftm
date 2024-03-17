@@ -60,3 +60,15 @@
   max-width: 600px;
   color: #6b6b6b;
 }
+
+.export {
+  background-color: #333300;
+  color: #FAFAFA;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  display: flex;
+  margin-left: auto;
+  margin-right: 12rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}

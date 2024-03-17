@@ -1,5 +1,5 @@
 import { AgGridReact } from 'ag-grid-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Content } from '../../components/Content';
 import styles from './style.module.css';
@@ -81,9 +81,21 @@ export default function Homepage() {
     { field: 'state' },
     { field: 'country' },
     { field: 'website', cellRenderer: (params: any) => {
-      return <a href={params.value} target="_blank" rel="noopener"> {params.value} </a>
+      return <a href={params.value} style={{color: "#2b6cb0"}} target="_blank" rel="noopener"> {params.value} </a>
     }},
   ]);
+
+  let gridApi: any = null;
+
+  const onGridReady = useCallback((event: any) => {
+    gridApi = event.api;
+  },[]);
+
+  function exportToFile(event: any) {
+    if (gridApi) {
+      gridApi.exportDataAsCsv();
+    }
+  }
 
   return (
     <>
@@ -101,12 +113,20 @@ export default function Homepage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <button 
+          className={styles.export}
+          onClick={exportToFile}
+        >
+          Export to csv
+        </button>
         <div className={styles.table}>
           <AgGridReact
             rowData={rowData}
             columnDefs={colDefs}
             className="ag-theme-quartz"
+            onGridReady={onGridReady}
             quickFilterText={search}
+            suppressExcelExport={true}
             onRowDoubleClicked={(e) => {
               if (!e.data) return;
               navigate(`/regional/${e.data.city.toLowerCase()}`);
