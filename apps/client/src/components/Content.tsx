@@ -7,6 +7,6 @@ export const Content = forwardRef<
 >(({ id, ...props }, ref) => {
   const content = useContent(id);
   return (
-    <p dangerouslySetInnerHTML={{ __html: content }} ref={ref} {...props} />
+    <div dangerouslySetInnerHTML={{ __html: content }} ref={ref} {...props} />
   );
 });
