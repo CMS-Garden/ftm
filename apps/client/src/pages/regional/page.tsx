@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import geoUrl from '../../assets/germany.geo.json?url';
 import styles from './style.module.css';
+import { AgGridReact } from 'ag-grid-react';
 
 const color = '#17A34A';
 const setOpacity = (color: string, opacity: number) => {
@@ -50,23 +51,42 @@ export default function Map() {
                   ],
                   name: 'Wordpress',
                 },
+              ]}
+            />
+          </div>
+        </div>
+
+        <div className={styles.piechartContainer}>
+          <span>Open- vs. Closed Source Systems</span>
+          <div>
+            <DonutChart
+              renderInnerValueContent={({ activeValue, totalValue }) => {
+                if (!activeValue) return '';
+                return new Intl.NumberFormat('de-DE', {
+                  style: 'percent',
+                  maximumFractionDigits: 0,
+                }).format(activeValue / totalValue);
+              }}
+              data={[
                 {
                   data: [
                     {
                       key: 'april - march',
-                      value: 10000,
+                      value: 50000,
                     },
                   ],
-                  name: 'Other',
+                  name: 'Open',
+                  color: '#17A34A',
                 },
                 {
                   data: [
                     {
                       key: 'april - march',
-                      value: 4000,
+                      value: 25000,
                     },
                   ],
-                  name: 'Amazon Pay',
+                  name: 'Closed',
+                  color: '#DC2625',
                 },
               ]}
             />
@@ -93,7 +113,17 @@ export default function Map() {
                     onMouseEnter={(e) => setHovered(geo.properties.cityName)}
                     onClick={() => console.log(geo)}
                     style={{
-                      default: { fill: setOpacity(color, Math.random()) },
+                      default: {
+                        fill: setOpacity(color, Math.random()),
+                        ...(geo.properties.cityName.toLowerCase() ===
+                        city.toLowerCase()
+                          ? {
+                              strokeWidth: 2,
+                              stroke: 'red',
+                              zIndex: 10,
+                            }
+                          : {}),
+                      },
                     }}
                   />
                 ))
@@ -101,6 +131,21 @@ export default function Map() {
             </Geographies>
           </ComposableMap>
         </div>
+        <ul className={styles.links}>
+          <span>Websites found in that region</span>
+          <li>
+            <a href="https://www.drupal.org/">Drupal</a>
+          </li>
+          <li>
+            <a href="https://wordpress.org/">Wordpress</a>
+          </li>
+          <li>
+            <a href="https://www.shopify.com/">Shopify</a>
+          </li>
+          <li>
+            <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
+          </li>
+        </ul>
       </div>
     </div>
   );
