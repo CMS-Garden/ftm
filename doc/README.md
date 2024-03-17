@@ -9,7 +9,7 @@ We're dedicated to fostering an open source community within the public sector, 
 
 ## Project Scope
 
-- Making government websites a saver place
+- Making government websites a safer place
 - Free security vulnerability scans
 - Providing additional information for websites of public institutions
 
