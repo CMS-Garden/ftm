@@ -13,7 +13,7 @@ class VersionmanagerApi:
         self.username = username
         self.password = password
         self.endpoint = endpoint
-        self.access_token, self.refresh_token = self.__get_jwt_token()
+        self.access_token = self.__get_jwt_token()
         self.request_headers = {
             'Authorization': 'Bearer ' + self.access_token,
             'Content-Type': 'application/json',
@@ -25,11 +25,11 @@ class VersionmanagerApi:
         Make a POST-Request to /auth/login and return the access_token and refresh_token as tuple.
         """
         url = self.endpoint + '/auth/login'
-        payload = {'email': self.username, 'password': self.password}
+        payload = {'username': self.username, 'password': self.password}
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, json=payload, headers=headers)
 
-        return response.json()['data']['access_token'], response.json()['data']['refresh_token']
+        return response.json()['data']['token']
 
     def create_systems(self, items: list) -> Response:
         """
@@ -46,7 +46,7 @@ class VersionmanagerApi:
         response = requests.get(url, json=json.dumps(payload), headers=self.request_headers)
         return response.json()
 
-    def get_all_systems(self) -> Response:
+    def get_systems(self) -> Response:
         """
         Make a GET-Request to /systems/ and return the response as JSON with system ids.
         """
