@@ -1,6 +1,7 @@
 from directus_api import DirectusApi
 import pandas as pd
 import json
+import time
 import os, dotenv
 from modules.versionmanager_api import VersionmanagerApi
 
@@ -15,7 +16,7 @@ api = DirectusApi(username=os.getenv('DIRECTUS_EMAIL'), password=os.getenv('DIRE
                       endpoint=os.getenv('DIRECTUS_URL'))
 
 def get_domain_cities_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -38,7 +39,7 @@ def get_domain_cities_df():
     return filtered_df
 
 def get_states_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -62,7 +63,7 @@ def get_states_df():
     return filtered_df
 
 def get_raw_domains_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -70,7 +71,7 @@ def get_raw_domains_df():
     return df
 
 def get_sites_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -96,6 +97,11 @@ def get_systems_df():
     systems = get_systems_from_versionmanager()
     systems_dict = [item['system'] for item in systems]
     df = pd.DataFrame(systems_dict)
+
+    # Fix columns with numbers as Int64
+    df['systemtype'] = df['systemtype'].astype('Int64')
+    df['detected_system_type'] = df['detected_system_type'].astype('Int64')
+    df['detection_accuracy'] = df['detection_accuracy'].astype('Int64')
     return df
 
 def create_systems_in_versionmanager( domains: list ):
@@ -317,21 +323,26 @@ def delete_all_items(collection):
     return
 
 if __name__ == '__main__':
+    # Measuring time
+    start = time.time()
     # 1. Get new records from Wikidata (not implemented yet) and store as json files. (can be improved)
 
     # 2. Register new sites in the versionmanager.
-    register_all_sites_in_versionmanager()
+    # register_all_sites_in_versionmanager()
 
     # 3. Publish new data in Directus.
-    register_new_cities_in_directus()
-    register_new_states_in_directus()
-    register_new_domains_in_directus()
+    # register_new_cities_in_directus()
+    # register_new_states_in_directus()
+    # register_new_domains_in_directus()
 
     # 4. Update existing data in Directus.
-    update_all_cities_in_directus()
+    # update_all_cities_in_directus()
     update_domains_in_directus()
 
     #get_systems_df()
     #process_data()
     #delete_all_items('City')
+
+    end = time.time()
+    print(f"Time elapsed: {end - start} seconds")
 
