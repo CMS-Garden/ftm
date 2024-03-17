@@ -1,10 +1,11 @@
 import styles from './style.module.css';
 import { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Homepage() {
   const [search, setSearch] = useState('');
-
+  const navigate = useNavigate();
   const [rowData, setRowData] = useState([
     {
       city: 'Berlin',
@@ -102,6 +103,10 @@ export default function Homepage() {
             columnDefs={colDefs}
             className="ag-theme-quartz"
             quickFilterText={search}
+            onRowDoubleClicked={(e) => {
+              if (!e.data) return;
+              navigate(`/regional/${e.data.city.toLowerCase()}`);
+            }}
           />
         </div>
       </div>

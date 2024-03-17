@@ -1,11 +1,12 @@
-import styles from "./NavBar.module.css";
+import { Link } from 'react-router-dom';
+import styles from './NavBar.module.css';
 
 export const NavBar = () => (
   <nav className={styles.navbar}>
     <ul>
-      <span className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         <span>💸</span> Follow The Money
-      </span>
+      </Link>
       <div className={styles.links}>
         <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
       </div>
