@@ -15,7 +15,8 @@ export default function Homepage() {
     const data = websites.filter((w) => !!w.versionmanager?.system_type);
     return data.reduce(
       (acc, pre) => {
-        const name = pre.versionmanager?.system_type?.name ?? 'unknown';
+        const name =
+          pre.versionmanager?.system_type_group?.group_name ?? 'unknown';
         const obj = acc.find((p) => p.name === name) ?? {
           name,
           data: [{ key: 'now', value: 0 }],
@@ -32,6 +33,38 @@ export default function Homepage() {
           }
         ];
       }[]
+    );
+  }, [websites]);
+  const opensourceData = useMemo(() => {
+    return websites.reduce(
+      ([open, closed], pre) => {
+        if (pre.versionmanager?.system_type_group?.is_open_source) {
+          return [
+            open,
+            {
+              ...closed,
+              data: [{ value: closed.data[0].value + 1, key: 'now' }],
+            },
+          ];
+        } else {
+          return [
+            { ...open, data: [{ value: open.data[0].value + 1, key: 'now' }] },
+            closed,
+          ];
+        }
+      },
+      [
+        {
+          name: 'Open Source',
+          data: [{ value: 0, key: 'now' }],
+          color: 'green',
+        },
+        {
+          name: 'Closed Source',
+          data: [{ value: 0, key: 'now' }],
+          color: 'red',
+        },
+      ]
     );
   }, [websites]);
   const categories = useCategories();
@@ -59,8 +92,20 @@ export default function Homepage() {
           <Content slug="front" />
         </div>
 
-        <div style={{ height: 300, marginBottom: 50 }}>
-          <DonutChart data={chartdata} legendPosition="right" />
+        <div
+          style={{
+            height: 300,
+            marginBottom: 50,
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+          }}
+        >
+          <div>
+            <DonutChart data={chartdata} legendPosition="left" />
+          </div>
+          <div>
+            <DonutChart data={opensourceData} legendPosition="right" />
+          </div>
         </div>
 
         <input
