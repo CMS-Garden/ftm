@@ -33,17 +33,16 @@ class VersionmanagerApi:
 
     def create_systems(self, items: list) -> Response:
         """
-        Make a POST-Request to /create_systems/ and return the response as JSON with system ids.
+        Make a POST-Request to /systems/create_systems/ and return the response as JSON with system ids.
         """
         payload = {
             'url': items,
-            'wartung': 'true',
-            'autocrawl': 'true',
+            'wartung': True,
+            'autocrawl': True,
         }
 
-        # dict to json
-        url = self.endpoint + '/create_systems/'
-        response = requests.get(url, json=json.dumps(payload), headers=self.request_headers)
+        url = self.endpoint + '/systems/create_systems/'
+        response = requests.post(url, json=payload, headers=self.request_headers)
         return response.json()
 
     def get_systems(self) -> Response:
