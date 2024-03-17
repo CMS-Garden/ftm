@@ -25,8 +25,7 @@ export default function Homepage() {
             target="_blank"
             rel="noopener"
           >
-            {' '}
-            {params.value}{' '}
+            {params.value}
           </a>
         );
       },
@@ -53,7 +52,7 @@ export default function Homepage() {
           <h1>
             <span>💸</span> Follow The Money
           </h1>
-          <Content id="welcome" />
+          <Content slug="front" />
         </div>
         <input
           className={styles.search}
@@ -98,6 +97,8 @@ export default function Homepage() {
         <button className={styles.export} onClick={exportToFile}>
           Export to csv
         </button>
+
+        <Content slug="about" />
       </div>
     </>
   );

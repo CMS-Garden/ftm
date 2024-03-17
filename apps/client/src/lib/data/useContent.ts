@@ -2,32 +2,32 @@ import { readItems } from '@directus/sdk';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useDirectus } from '../directus';
 
-export const useContent = (key: string, lang: string) => {
+export const useContent = (slug: string, lang: string) => {
   const directus = useDirectus();
   const { data } = useSuspenseQuery({
-    queryKey: ['content', key],
+    queryKey: ['content', slug],
     queryFn: async () => {
       const response = await directus.request(
         readItems('website_content' as any, {
+          filter: {
+            page: { _eq: slug },
+          },
           ['deep' as any]: {
-            ['website_content_translations' as any]: {
+            ['translations' as any]: {
               ['_filter' as any]: {
                 ['_and' as any]: [
                   {
-                    languages: { _eq: lang },
-                  },
-                  {
-                    slug: { _eq: key },
+                    lang_code: { _eq: lang },
                   },
                 ],
               },
             },
           },
-          fields: ['*', { translations: ['*'] }],
+          fields: ['*', { translations: ['content'] }],
           limit: 1,
         })
       );
-      return response[0]?.translations?.[0]?.content ?? key;
+      return response[0]?.translations?.[0]?.content ?? '';
     },
   });
   return data;
