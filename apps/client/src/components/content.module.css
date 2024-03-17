@@ -1,0 +1,7 @@
+.text a:hover {
+  text-decoration: underline;
+}
+
+.text b {
+  font-weight: 500;
+}

@@ -1,12 +1,21 @@
 import { HTMLProps, forwardRef } from 'react';
 import { useContent } from '../lib/data/useContent';
+import styles from './content.module.css';
 
 export const Content = forwardRef<
   HTMLParagraphElement,
-  { id: string } & Omit<HTMLProps<HTMLParagraphElement>, 'children'>
->(({ id, ...props }, ref) => {
-  const content = useContent(id);
+  { slug: string } & Omit<HTMLProps<HTMLParagraphElement>, 'children'>
+>(({ slug, ...props }, ref) => {
+  const lang = ['en-US', 'de-DE'].includes(navigator.language)
+    ? navigator.language
+    : 'en-US';
+  const content = useContent(slug, lang);
   return (
-    <p dangerouslySetInnerHTML={{ __html: content }} ref={ref} {...props} />
+    <p
+      className={styles.text}
+      dangerouslySetInnerHTML={{ __html: content }}
+      ref={ref}
+      {...props}
+    />
   );
 });

@@ -63,12 +63,36 @@
 
 .export {
   background-color: #333300;
-  color: #FAFAFA;
+  color: #fafafa;
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
   display: flex;
-  margin-left: auto;
-  margin-right: 12rem;
-  margin-top: 0.5rem;
+  margin: 0.5rem auto;
   cursor: pointer;
+}
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 6px;
+  justify-content: center;
+  place-items: center;
+  margin: 32px auto;
+  max-width: 800px;
+}
+
+.categories > span {
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 14px;
+  background-color: #e0e0e0;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.categories > span:hover {
+  background-color: #d0d0d0;
+}
+
+.categories > span[data-selected='true'] {
+  background-color: #07966960;
 }

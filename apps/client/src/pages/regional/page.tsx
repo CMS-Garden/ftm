@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import geoUrl from '../../assets/germany.geo.json?url';
 import styles from './style.module.css';
-import { AgGridReact } from 'ag-grid-react';
 
 const color = '#17A34A';
 const setOpacity = (color: string, opacity: number) => {
@@ -32,6 +31,20 @@ export default function Map() {
           <span>Relative CMS Usage</span>
           <div>
             <DonutChart
+              renderInnerValueContent={({ activeValue, totalValue }) => {
+                if (!activeValue) return '';
+                return (
+                  <>
+                    <span>
+                      {new Intl.NumberFormat('de-DE', {
+                        style: 'percent',
+                        maximumFractionDigits: 0,
+                      }).format(activeValue / totalValue)}
+                    </span>
+                    <span style={{ fontSize: '0.8rem' }}>{activeValue}</span>
+                  </>
+                );
+              }}
               data={[
                 {
                   data: [
@@ -62,10 +75,17 @@ export default function Map() {
             <DonutChart
               renderInnerValueContent={({ activeValue, totalValue }) => {
                 if (!activeValue) return '';
-                return new Intl.NumberFormat('de-DE', {
-                  style: 'percent',
-                  maximumFractionDigits: 0,
-                }).format(activeValue / totalValue);
+                return (
+                  <>
+                    <span>
+                      {new Intl.NumberFormat('de-DE', {
+                        style: 'percent',
+                        maximumFractionDigits: 0,
+                      }).format(activeValue / totalValue)}
+                    </span>
+                    <span style={{ fontSize: '0.8rem' }}>{activeValue}</span>
+                  </>
+                );
               }}
               data={[
                 {

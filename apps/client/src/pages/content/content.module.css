@@ -1,0 +1,5 @@
+.content {
+  max-width: 900px;
+  padding: 8px;
+  text-wrap: pretty;
+}

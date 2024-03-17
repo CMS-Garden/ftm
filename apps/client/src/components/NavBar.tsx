@@ -8,9 +8,7 @@ export const NavBar = () => (
       <Link to="/" className={styles.logo}>
         <img src={logoImg} height="50" alt="Follow the Money Logo" title="Follow the Money" />
       </Link>
-      <div className={styles.links}>
-        <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
-      </div>
+      <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
     </ul>
   </nav>
 );
