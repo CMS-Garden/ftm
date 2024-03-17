@@ -80,7 +80,9 @@ export default function Homepage() {
     { field: 'city' },
     { field: 'state' },
     { field: 'country' },
-    { field: 'website' },
+    { field: 'website', cellRenderer: (params: any) => {
+      return <a href={params.value} target="_blank" rel="noopener"> {params.value} </a>
+    }},
   ]);
 
   return (
