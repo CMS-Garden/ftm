@@ -221,9 +221,9 @@ ORDER BY DESC(?population)
 
 DE-domains-city.json query
 ```sparql
-SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?category
+SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?categoryLabel
 WHERE {
-  BIND("city" AS ?category) .
+  BIND("city" AS ?categoryLabel) .
   wd:Q183 wdt:P150 ?bundesland.
   ?bundesland wdt:P150 ?state.
   ?state wdt:P150 ?area.
@@ -239,9 +239,9 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-town.json query
 ```sparql
-SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?category
+SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?categoryLabel
 WHERE {
-  BIND("city" AS ?category) .
+  BIND("city" AS ?categoryLabel) .
   wd:Q183 wdt:P150 ?bundesland.
   ?bundesland wdt:P150 ?state.
   ?state wdt:P150 ?area.
