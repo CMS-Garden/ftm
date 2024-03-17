@@ -4,26 +4,41 @@ import { useNavigate } from 'react-router-dom';
 import { Content } from '../../components/Content';
 import styles from './style.module.css';
 import { useCities } from '../../lib/data/useCities';
+import { useCategories } from '../../lib/data/useCategories';
 
 export default function Homepage() {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const cities = useCities();
-  console.log(cities);
+  const categories = useCategories();
   const [colDefs, setColDefs] = useState([
     { field: 'Name' },
     { field: 'state_id' },
     { field: 'country_id' },
-    { field: 'website', cellRenderer: (params: any) => {
-      return <a href={params.value} style={{color: "#2b6cb0"}} target="_blank" rel="noopener"> {params.value} </a>
-    }},
+    {
+      field: 'website',
+      cellRenderer: (params: any) => {
+        return (
+          <a
+            href={params.value}
+            style={{ color: '#2b6cb0' }}
+            target="_blank"
+            rel="noopener"
+          >
+            {' '}
+            {params.value}{' '}
+          </a>
+        );
+      },
+    },
   ]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   let gridApi: any = null;
 
   const onGridReady = useCallback((event: any) => {
     gridApi = event.api;
-  },[]);
+  }, []);
 
   function exportToFile(event: any) {
     if (gridApi) {
@@ -38,7 +53,7 @@ export default function Homepage() {
           <h1>
             <span>💸</span> Follow The Money
           </h1>
-          <Content id="hero_description" />
+          <Content id="welcome" />
         </div>
         <input
           className={styles.search}
@@ -47,12 +62,25 @@ export default function Homepage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button 
-          className={styles.export}
-          onClick={exportToFile}
-        >
-          Export to csv
-        </button>
+
+        <div className={styles.categories}>
+          {categories.map((category) => (
+            <span
+              key={category.id}
+              data-selected={selectedCategory === category.name}
+              onClick={() => {
+                if (selectedCategory === category.name) {
+                  setSelectedCategory(null);
+                } else {
+                  setSelectedCategory(category.name);
+                }
+              }}
+            >
+              {category.name}
+            </span>
+          ))}
+        </div>
+
         <div className={styles.table}>
           <AgGridReact
             rowData={cities}
@@ -67,8 +95,9 @@ export default function Homepage() {
             }}
           />
         </div>
-        <Content id="about-us" className={styles.about} />{' '}
-        <Content id="thanks" className={styles.about} />
+        <button className={styles.export} onClick={exportToFile}>
+          Export to csv
+        </button>
       </div>
     </>
   );
