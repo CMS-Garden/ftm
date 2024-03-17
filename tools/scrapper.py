@@ -7,33 +7,12 @@ from modules.versionmanager_api import VersionmanagerApi
 # Load environment variables
 dotenv.load_dotenv()
 
+# Settings
+country_id = 1 # Germany
+
 # Connect to directus API to post the data to a collection
 api = DirectusApi(username=os.getenv('DIRECTUS_EMAIL'), password=os.getenv('DIRECTUS_PASSWORD'),
                       endpoint=os.getenv('DIRECTUS_URL'))
-country_id = 1 # Germany
-
-def process_data():
-    # Load the existing collections into DataFrames
-
-    # agencies = pd.DataFrame(api.get_items(collection="agency"))
-    # categories = pd.DataFrame(api.get_items(collection="category"))
-    # countries = pd.DataFrame(api.get_items(collection="country"))
-    # domains = pd.DataFrame(api.get_items(collection="domain"))
-    # providers = pd.DataFrame(api.get_items(collection="provider"))
-    # states = pd.DataFrame(api.get_items(collection="state"))
-    # techstacks = pd.DataFrame(api.get_items(collection="tech_stack"))
-    # versionmanager = pd.DataFrame(api.get_items(collection="versionmanager"))
-    #... Maybe more
-
-    domain_cities = get_domain_cities_df()
-    # sites = get_sites_df(cities)
-
-    # Create City items.
-    # status = api.create_items(collection="City", items=domain_cities.to_dict('records'))
-
-    # Update collection items.
-    # status = api.update_items(collection="City", items=cities.to_dict('records'))
-    return
 
 def get_domain_cities_df():
     with open('data/2-DE-domains-bundesland.json') as f:
@@ -138,13 +117,6 @@ def create_systems_in_versionmanager( domains: list ):
     systems = versionmanager_api.create_systems(domains)
     return systems
 
-### Helpers
-def delete_all_items(collection):
-    api = DirectusApi(username=os.getenv('DIRECTUS_EMAIL'), password=os.getenv('DIRECTUS_PASSWORD'),
-                      endpoint=os.getenv('DIRECTUS_URL'))
-    api.delete_all_items_from_collection(collection=collection)
-    return
-
 def register_all_sites_in_versionmanager():
     sample_domains = get_sites_df()
     sample_domains = sample_domains['Name'].tolist()
@@ -179,13 +151,15 @@ def update_all_cities_in_directus():
 
     # Create a dictionary mapping cityLabel to state_id from domain_data
     city_to_state = dict(zip(domain_data['cityLabel'], domain_data['state_id']))
+    city_to_population = dict(zip(domain_data['cityLabel'], domain_data['population']))
 
     # Populate cities['state_id'] using the mapping dictionary
     cities['state_id'] = cities['Name'].map(city_to_state).astype('Int64')
+    cities['population'] = cities['Name'].map(city_to_population).astype('Int64')
     cities['country_id'] = country_id
 
     # Keep only the columns that are needed
-    cities = cities[['id', 'state_id', 'country_id', 'status', 'Name']]
+    cities = cities[['id', 'state_id', 'country_id', 'status', 'Name', 'sort', 'population']]
     # Update the cities in Directus
     data = cities.to_dict('records')
 
@@ -224,21 +198,138 @@ def register_new_states_in_directus():
     status = api.create_items(collection="state", items=domain_states.to_dict('records'))
     return
 
+def register_new_domains_in_directus():
+    print('Registering new domains in Directus.')
+    domains = pd.DataFrame(api.get_items(collection="domain"))
+    domain_data = get_raw_domains_df()
+
+    # Filter out the domains in domain_data that are already in the domains Directus collection.
+    domain_data = domain_data[~domain_data['website'].isin(domains['url'])]
+
+    if domain_data.empty:
+        print('No new domains to register.')
+        return
+
+    # Get data from Directus
+    cities = pd.DataFrame(api.get_items(collection="City"))
+    states = pd.DataFrame(api.get_items(collection="state"))
+
+    # Get system data from versionmanager
+    systems = get_systems_df()
+
+    # Create a city_id column from the id
+    cities['city_id'] = cities['id']
+
+    # Create a state_id column from the id
+    states['state_id'] = states['id']
+
+    # Populate the domain_data with the state_id matching the state name in states with the bundeslandLabel in domain_data
+    domain_data = domain_data.merge(states, left_on='bundeslandLabel', right_on='name', how='left')
+
+    # Populate the domain_data with the city_id matching the city name in cities with the cityLabel in domain_data
+    domain_data = domain_data.merge(cities[['Name', 'city_id']], left_on='cityLabel', right_on='Name', how='left')
+
+    # Populate the raw_versionmanager with the systems row as json matching that has the 'original_url' the same as the 'website' in domain_data
+    #itterate over the rows in domain_data
+    for index, row in domain_data.iterrows():
+        # get the system that has the same 'original_url' as the 'website' in domain_data
+        system_df = systems[systems['original_url'] == row['website']]
+        system = systems[systems['original_url'] == row['website']].to_json(orient='records')
+        # if the system is not empty
+        if system:
+            # add the system to the domain_data
+            domain_data.at[index, 'raw_versionmanager'] = system
+            domain_data.at[index, 'versionmanager_id'] = system_df['id'].values[0] if not system_df.empty else None
+
+    # Convert the versionmanager_id to Int64
+    domain_data['versionmanager_id'] = domain_data['versionmanager_id'].astype('Int64')
+
+    # Clean up the domain_data
+    domain_data['url'] = domain_data['website']
+    domain_data['status'] = 'published'
+    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager']]
+
+    status = api.create_items(collection="domain", items=domain_data.to_dict('records'))
+    print(status.status_code)
+    return
+
+def update_domains_in_directus():
+    print('Updating domains in Directus.')
+    domains = pd.DataFrame(api.get_items(collection="domain"))
+    domain_data = get_raw_domains_df()
+
+    if domains.empty:
+        print('No new domains to update.')
+        return
+
+    # Get data from Directus
+    cities = pd.DataFrame(api.get_items(collection="City"))
+    states = pd.DataFrame(api.get_items(collection="state"))
+
+    # Get system data from versionmanager
+    systems = get_systems_df()
+
+    # create a column from the id
+    cities['city_id'] = cities['id']
+    states['state_id'] = states['id']
+    domains['domain_id'] = domains['id']
+
+
+    # Populate the domain_data with the state_id matching the state name in states with the bundeslandLabel in domain_data
+    domain_data = domain_data.merge(states, left_on='bundeslandLabel', right_on='name', how='left')
+
+    # Populate the domain_data with the city_id matching the city name in cities with the cityLabel in domain_data
+    domain_data = domain_data.merge(cities[['Name', 'city_id']], left_on='cityLabel', right_on='Name', how='left')
+
+    domain_data = domain_data.merge(domains[['url', 'domain_id']], left_on='website', right_on='url', how='left')
+
+
+    # Populate the raw_versionmanager with the systems row as json matching that has the 'original_url' the same as the 'website' in domain_data
+    #itterate over the rows in domain_data
+    for index, row in domain_data.iterrows():
+        # get the system that has the same 'original_url' as the 'website' in domain_data
+        system_df = systems[systems['original_url'] == row['website']]
+        system = systems[systems['original_url'] == row['website']].to_json(orient='records')
+        # if the system is not empty
+        if system:
+            # add the system to the domain_data
+            domain_data.at[index, 'raw_versionmanager'] = system
+            domain_data.at[index, 'versionmanager_id'] = system_df['id'].values[0] if not system_df.empty else None
+
+    # Convert the versionmanager_id to Int64
+    domain_data['versionmanager_id'] = domain_data['versionmanager_id'].astype('Int64')
+
+    # Clean up the domain_data
+    domain_data['url'] = domain_data['website']
+    domain_data['status'] = 'published'
+    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id']]
+    domain_data = domain_data.rename(columns={'domain_id': 'id'})
+
+    status = api.update_items(collection="domain", items=domain_data.to_dict('records'))
+    print(status.status_code)
+    return
+
+### Helpers
+def delete_all_items(collection):
+    api = DirectusApi(username=os.getenv('DIRECTUS_EMAIL'), password=os.getenv('DIRECTUS_PASSWORD'),
+                      endpoint=os.getenv('DIRECTUS_URL'))
+    api.delete_all_items_from_collection(collection=collection)
+    return
+
 if __name__ == '__main__':
     # 1. Get new records from Wikidata (not implemented yet) and store as json files. (can be improved)
+
     # 2. Register new sites in the versionmanager.
-    #register_all_sites_in_versionmanager()
+    register_all_sites_in_versionmanager()
+
     # 3. Publish new data in Directus.
-    #register_new_cities_in_directus()
-    #register_new_states_in_directus()
+    register_new_cities_in_directus()
+    register_new_states_in_directus()
+    register_new_domains_in_directus()
 
     # 4. Update existing data in Directus.
     update_all_cities_in_directus()
-
-
-
-
-
+    update_domains_in_directus()
 
     #get_systems_df()
     #process_data()
