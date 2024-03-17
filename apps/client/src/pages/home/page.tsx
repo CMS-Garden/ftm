@@ -9,7 +9,7 @@ export default function Homepage() {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const cities = useCities();
-  console.log(cities);
+  // console.log(cities);
   const [colDefs, setColDefs] = useState([
     { field: 'Name' },
     { field: 'state_id' },
@@ -47,7 +47,7 @@ export default function Homepage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button 
+        <button
           className={styles.export}
           onClick={exportToFile}
         >
