@@ -2,6 +2,7 @@ from directus_api import DirectusApi
 import pandas as pd
 import json
 import os, dotenv
+from modules.versionmanager_api import VersionmanagerApi
 
 # Load environment variables
 dotenv.load_dotenv()
@@ -55,8 +56,8 @@ def get_domain_cities_df():
 
     return filtered_df
 
-def get_sites_df( cities_df ):
-    with open('data/2-german-sites.json') as f:
+def get_sites_df():
+    with open('data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -71,14 +72,45 @@ def get_sites_df( cities_df ):
 
     return filtered_df
 
+def get_systems_from_versionmanager():
+    # Get all systems from the versionmanager
+    versionmanager_api = VersionmanagerApi(username=os.getenv('VERSIONMANAGER_EMAIL'), password=os.getenv('VERSIONMANAGER_PASSWORD'),
+                      endpoint=os.getenv('VERSIONMANAGER_URL'))
+    systems = versionmanager_api.get_systems()
+    return systems['data']
+
+def get_systems_df():
+    systems = get_systems_from_versionmanager()
+    systems_dict = [item['system'] for item in systems]
+    df = pd.DataFrame(systems_dict)
+    return df
+
+def create_systems_in_versionmanager( domains: list ):
+    versionmanager_api = VersionmanagerApi(username=os.getenv('VERSIONMANAGER_EMAIL'), password=os.getenv('VERSIONMANAGER_PASSWORD'),
+                      endpoint=os.getenv('VERSIONMANAGER_URL'))
+
+    existing_systems = get_systems_df()
+
+    # Filter out the existing systems
+
+    # systems = versionmanager_api.create_systems(domains)
+    return systems
+
 ### Helpers
 def delete_all_items(collection):
     api = DirectusApi(username=os.getenv('FASTUS_EMAIL'), password=os.getenv('FASTUS_PASSWORD'),
-                      endpoint="https://ftm.cms.garden")
+                      endpoint=os.getenv('FASTUS_URL'))
     api.delete_all_items_from_collection(collection=collection)
     return
 
+def register_all_sites_in_versionmanager():
+    sample_domains = get_sites_df()
+    sample_domains = sample_domains['Name'].tolist()
+    create_systems_in_versionmanager(sample_domains)
+
 if __name__ == '__main__':
-    process_data()
+    get_systems_df()
+    #process_data()
     #delete_all_items('City')
+    #register_all_sites_in_versionmanager()
 
