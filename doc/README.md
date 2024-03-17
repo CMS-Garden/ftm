@@ -2,7 +2,7 @@
 
 This project is a centralized knowledge database to provide transparency on the current state of web-based systems in the public sector. In detail, we provide:
 
-- Transparency: With an overview of government web systems, their funding, and stakeholders.
+- Open data: An overview of government web systems, their funding, and stakeholders.
 - Maintenance state: Providing maintenance stats (e.g., used components, versions, known security vulnerabilities) of web systems.
 - FOSS information: Percentage of Open Source based web systems.
 
@@ -10,8 +10,7 @@ We're dedicated to fostering an open-source community within the public sector. 
 
 ## Vision
 
-- Transparency for the current state of web based systems in the public sector.
-- Public money must lead to public code.
+We provide transparency to the web-based system landscape of the public sector. With the principle of "public money, public code", we encourage the use of open-source technologies to foster maintainability and innovation in the public sector.
 
 ## Project Scope
 
