@@ -1,5 +1,6 @@
 .content {
-  margin-top: 60px;
+  margin-top: 24px;
+  padding:2rem;
 }
 
 .hero {
@@ -8,7 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  height: 40vh;
+  margin-bottom: 2rem;
 }
 
 .hero > h1 {
@@ -26,7 +27,6 @@
 .hero p {
   font-size: 1.2rem;
   font-weight: 300;
-  color: #6b6b6b;
   max-width: 600px;
   text-wrap: pretty;
 }
@@ -66,9 +66,10 @@
   color: #fafafa;
   padding: 0.5rem 1rem;
   border-radius: 0.3rem;
-  display: flex;
-  margin: 0.5rem auto;
+  margin: 1.5rem auto;
   cursor: pointer;
+  text-align: center;
+  display:block;
 }
 .categories {
   display: flex;

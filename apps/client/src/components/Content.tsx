@@ -12,7 +12,8 @@ export const Content = forwardRef<
   const lang = 'en-US';
   const content = useContent(slug, lang);
   return (
-    <p
+
+    <div
       className={styles.text}
       dangerouslySetInnerHTML={{ __html: content }}
       ref={ref}
