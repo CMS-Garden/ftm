@@ -5,7 +5,11 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@directus/sdk": "^15.0.3",
     "@shopify/polaris-viz": "^11.0.0",
+    "@tanstack/react-query": "^5.28.4",
+    "ag-grid-community": "^31.1.1",
+    "ag-grid-react": "^31.1.1",
     "framer-motion": "^11.0.14",
     "react": "18.2.0",
     "react-dom": "18.2.0",
