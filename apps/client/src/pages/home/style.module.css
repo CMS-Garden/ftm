@@ -28,7 +28,6 @@
   font-weight: 300;
   color: #6b6b6b;
   max-width: 600px;
-  text-align: center;
   text-wrap: pretty;
 }
 
@@ -54,4 +53,10 @@
   margin: 32px auto;
   box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.about {
+  margin: 32px auto;
+  max-width: 600px;
+  color: #6b6b6b;
 }

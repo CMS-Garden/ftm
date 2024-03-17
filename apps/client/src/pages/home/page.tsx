@@ -1,7 +1,8 @@
-import styles from './style.module.css';
-import { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Content } from '../../components/Content';
+import styles from './style.module.css';
 
 export default function Homepage() {
   const [search, setSearch] = useState('');
@@ -89,6 +90,7 @@ export default function Homepage() {
           <h1>
             <span>💸</span> Follow The Money
           </h1>
+          <Content id="hero_description" />
         </div>
         <input
           className={styles.search}
@@ -109,6 +111,8 @@ export default function Homepage() {
             }}
           />
         </div>
+        <Content id="about-us" className={styles.about} />{' '}
+        <Content id="thanks" className={styles.about} />
       </div>
     </>
   );
