@@ -16,7 +16,7 @@ We're dedicated to fostering an open-source community within the public sector. 
 ## Project Scope
 
 - Providing an overview of the public web system inventory.
-- Making government websites a saver place.
+- Making government websites a safer place.
 - Providing additional software information for websites of public institutions.
 
 ## Project Context
