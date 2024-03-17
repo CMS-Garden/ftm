@@ -1,11 +1,6 @@
 .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  position: relative;
+  background-color: black;
 }
 
 .navbar > ul {
@@ -34,6 +29,25 @@
   margin-left: auto;
 }
 
+.links a {
+  display: inline-block;
+  font-weight: 700;
+}
+
+.links a::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 3px;
+  background: #000;
+  transition: width .3s;
+}
+
 .links > a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+}
+
+.links > a:hover::after {
+  text-decoration: none;
+  width: 100%;
 }
