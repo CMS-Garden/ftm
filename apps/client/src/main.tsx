@@ -7,7 +7,7 @@ import {
 import * as ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import router from './routes/root';
-import 'the-new-css-reset/css/reset.css';
+// import 'the-new-css-reset/css/reset.css';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
