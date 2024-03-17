@@ -1,3 +1,4 @@
+import numpy as np
 from directus_api import DirectusApi
 import pandas as pd
 import json
@@ -95,13 +96,16 @@ def get_systems_from_versionmanager():
 
 def get_systems_df():
     systems = get_systems_from_versionmanager()
-    systems_dict = [item['system'] for item in systems]
-    df = pd.DataFrame(systems_dict)
+    df = pd.DataFrame(systems)
+
+    # Create a new column with the original_url from the systems['system'] list.
+    df['original_url'] = df['system'].apply(lambda x: x['original_url'])
+    df['id'] = df['system'].apply(lambda x: x['id'])
 
     # Fix columns with numbers as Int64
-    df['systemtype'] = df['systemtype'].astype('Int64')
-    df['detected_system_type'] = df['detected_system_type'].astype('Int64')
-    df['detection_accuracy'] = df['detection_accuracy'].astype('Int64')
+    # df['systemtype'] = df['systemtype'].astype('Int64')
+    # df['detected_system_type'] = df['detected_system_type'].astype('Int64')
+    # df['detection_accuracy'] = df['detection_accuracy'].astype('Int64')
     return df
 
 def create_systems_in_versionmanager( domains: list ):
@@ -311,8 +315,13 @@ def update_domains_in_directus():
     domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id']]
     domain_data = domain_data.rename(columns={'domain_id': 'id'})
 
-    status = api.update_items(collection="domain", items=domain_data.to_dict('records'))
-    print(status.status_code)
+    # Break into 100 item chunks
+    domain_data_chunks = np.array_split(domain_data, len(domain_data) / 100)
+
+    for chunk in domain_data_chunks:
+        status = api.update_items(collection="domain", items=chunk.to_dict('records'))
+        print(status.status_code)
+
     return
 
 ### Helpers
