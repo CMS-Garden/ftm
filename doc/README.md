@@ -1,4 +1,4 @@
-# Follow the Public Money
+# Follow the Money
 
 This project is a centralized knowledge database to provide transparency on the current state of web-based systems in the public sector. In detail, we provide:
 
