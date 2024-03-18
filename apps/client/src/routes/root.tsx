@@ -5,6 +5,8 @@ import Map from '../pages/regional/page';
 import Home from '../pages/home/page';
 import { ContentPage } from '../pages/content/page';
 import { AboutPage } from '../pages/about/page';
+import { ImprintPage } from '../pages/imprint/page';
+import { PrivacyPage } from '../pages/privacy/page';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +16,8 @@ const router = createBrowserRouter([
       { path: '/', element: <Home /> },
       { path: '/regional/:city', element: <Map /> },
       { path: '/about', element: <AboutPage /> },
+      { path: '/imprint', element: <ImprintPage /> },
+      { path: '/privacy-policy', element: <PrivacyPage /> },
       { path: '/:slug', element: <ContentPage /> },
     ],
     errorElement: <ErrorPage />,

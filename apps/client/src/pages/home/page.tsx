@@ -96,9 +96,15 @@ export default function Homepage() {
         <button className={styles.export} onClick={exportToFile}>
           Export to csv
         </button>
-
-        <Content slug="about" />
       </div>
+      <footer>
+        <nav aria-labelledby="footer-navigation">
+          <ul>
+            <li><a href="/imprint">Imprint</a></li>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+          </ul>
+        </nav>
+      </footer>
     </>
   );
 }
