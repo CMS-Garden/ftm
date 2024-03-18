@@ -83,7 +83,7 @@
   max-width: 800px;
 }
 
-.categories > span {
+.categories > * {
   padding: 4px 8px;
   border-radius: 16px;
   font-size: 14px;
@@ -92,11 +92,11 @@
   cursor: pointer;
 }
 
-.categories > span:hover {
+.categories > *:hover {
   background-color: #d0d0d0;
 }
 
-.categories > span[data-selected='true'] {
+.categories > *[data-selected='true'] {
   background-color: #07966960;
 }
 

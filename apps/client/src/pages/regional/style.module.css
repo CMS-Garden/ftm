@@ -56,3 +56,13 @@ ul.links > li {
   list-style: disc;
   margin-left: 16px;
 }
+
+.table {
+  height: 500px;
+  width: 900px;
+  max-width: 100%;
+  margin: 32px auto;
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  grid-column: 1 / -1;
+}

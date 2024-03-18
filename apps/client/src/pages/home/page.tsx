@@ -1,6 +1,6 @@
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Content } from '../../components/Content';
 import { useCategories } from '../../lib/data/useCategories';
 import { useWebsites } from '../../lib/data/useWebsites';
@@ -19,6 +19,10 @@ export default function Homepage() {
   const isMobile = useIsMobile();
   const websites = useWebsites();
   const [hideUndetected, setHideUndetected] = useState(true);
+  const states = useMemo(
+    () => [...new Set(websites.map((w) => w.state_id?.name))],
+    [websites]
+  );
   const chartdata = useMemo(() => {
     const data = websites.filter((w) => !!w.versionmanager?.system_type_group);
     return data.reduce(
@@ -143,6 +147,7 @@ export default function Homepage() {
               }}
             />
           </div>
+
           <div>
             <DonutChart
               data={opensourceData}
@@ -261,15 +266,18 @@ export default function Homepage() {
                         gap: '4px',
                       }}
                     >
-                      <img
-                        src={params.data.versionmanager.system_type_group.icon}
-                        alt={params.value}
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          marginRight: '5px',
-                        }}
-                      />
+                      {params.data.versionmanager.system_type_group.icon && (
+                        <img
+                          src={
+                            params.data.versionmanager.system_type_group.icon
+                          }
+                          alt={params.value}
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                          }}
+                        />
+                      )}
                       {params.value}
                     </span>
                   );
@@ -333,6 +341,14 @@ export default function Homepage() {
         <button className={styles.export} onClick={exportToFile}>
           Export to csv
         </button>
+
+        <div className={styles.categories}>
+          {states.map((state) => (
+            <Link to={`/regional/${state}`} key={state}>
+              {state}
+            </Link>
+          ))}
+        </div>
       </div>
     </>
   );

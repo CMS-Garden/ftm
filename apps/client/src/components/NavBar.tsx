@@ -32,9 +32,7 @@ export const NavBar = () => {
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://github.com/CMS-Garden/ftm">
-            Bla bla
-          </a>
+          <Link to="/about">About Us</Link>
         </li>
         <li>
           <a target="_blank" href="https://github.com/CMS-Garden/ftm">
