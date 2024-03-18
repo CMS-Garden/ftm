@@ -161,19 +161,33 @@ export default function Map() {
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
-                geographies.map((geo) => (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    onMouseEnter={(e) => setHovered(geo.properties.cityName)}
-                    onClick={() => console.log(geo)}
-                    style={{
-                      default: {
-                        fill: setOpacity(color, Math.random()),
-                      },
-                    }}
-                  />
-                ))
+                geographies.map((geo) => {
+                  const site = websites.find((w) =>
+                    geo.properties.cityName.includes(w.city_id?.Name)
+                  );
+                  const hasData = !!site?.versionmanager?.system_type_group;
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      onMouseEnter={(e) => setHovered(geo.properties.cityName)}
+                      onClick={() => console.log(geo)}
+                      style={{
+                        default: {
+                          fill:
+                            geo.properties.stateNameEng === region
+                              ? hasData
+                                ? site?.versionmanager?.system_type_group
+                                    ?.is_open_source
+                                  ? '#119F56'
+                                  : '#DC2625'
+                                : '#D6D6DA'
+                              : '#D6D6DA20',
+                        },
+                      }}
+                    />
+                  );
+                })
               }
             </Geographies>
           </ComposableMap>

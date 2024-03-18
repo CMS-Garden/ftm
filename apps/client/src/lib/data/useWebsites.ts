@@ -35,14 +35,6 @@ export const useWebsites = () => {
           (a: any, b: any) => a.date - b.date
         )?.[0],
       })) as WebsiteResponse[];
-      console.table(
-        withVersionManager
-          .filter((p) => p.versionmanager?.system_type_group)
-          .map((p) => ({
-            name: p.versionmanager?.system_type_group?.group_name,
-            open_source: p.versionmanager?.system_type_group?.is_open_source,
-          }))
-      );
       return withVersionManager;
     },
   });
