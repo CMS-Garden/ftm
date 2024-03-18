@@ -257,11 +257,22 @@ export default function Homepage() {
                 },
                 headerName: 'Website',
               },
-              { field: 'city_id.Name', headerName: 'City' },
-              { field: 'state_id.name', headerName: 'State' },
+              { field: 'city_id.Name', 
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
+                headerName: 'City' },
+              { field: 'state_id.name', 
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
+                headerName: 'State' },
               {
                 field: 'versionmanager.system_type_group.group_name',
                 headerName: 'System',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.data.versionmanager?.system_type_group) {
                     return 'Unknown';
@@ -295,6 +306,9 @@ export default function Homepage() {
               {
                 field: 'versionmanager.lighthouse.performance',
                 headerName: 'Performance',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
                   return (
@@ -316,6 +330,9 @@ export default function Homepage() {
               {
                 field: 'versionmanager.lighthouse.accessibility',
                 headerName: 'Accessibility',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
                   return (
