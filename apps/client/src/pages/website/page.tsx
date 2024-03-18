@@ -34,99 +34,108 @@ const View = ({ domain }: { domain: string }) => {
         {domain}
       </h1>
 
-      {website.versionmanager?.system.id && (
-        <img
-          src={`https://be.versionmanager.io/systems/screenshot/${website.versionmanager?.system.id}`}
-          style={{ width: '100%', marginBottom: 16, borderRadius: 24 }}
-        />
-      )}
+      <div className={styles.container}>
+        <div>
+          <p>{website.description}</p>
 
-      <p>{website.description}</p>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            {hasSystemType && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  flexDirection: 'column',
+                  placeItems: 'center',
+                }}
+              >
+                <img
+                  src={website.versionmanager?.system_type_group?.icon}
+                  style={{
+                    height: 100,
+                    width: 100,
+                    marginBottom: 16,
+                    marginTop: 16,
+                  }}
+                />
+                <span>
+                  {website.versionmanager?.system_type_group?.group_name}
+                </span>
+              </div>
+            )}
 
-      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-        {hasSystemType && (
-          <div
-            style={{
-              display: 'inline-flex',
-              flexDirection: 'column',
-              placeItems: 'center',
-            }}
-          >
-            <img
-              src={website.versionmanager?.system_type_group?.icon}
-              style={{
-                height: 100,
-                width: 100,
-                marginBottom: 16,
-                marginTop: 16,
-              }}
-            />
-            <span>{website.versionmanager?.system_type_group?.group_name}</span>
+            {hasLighthouse && (
+              <>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    placeItems: 'center',
+                  }}
+                >
+                  <Score
+                    score={parseFloat(
+                      website.versionmanager!.lighthouse!.accessibility
+                    )}
+                  />
+                  <span>Accessibility</span>
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    placeItems: 'center',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Score
+                    score={parseFloat(
+                      website.versionmanager!.lighthouse!.best_practices
+                    )}
+                  />
+                  <span>
+                    Best
+                    <br />
+                    Practices
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    placeItems: 'center',
+                  }}
+                >
+                  <Score
+                    score={parseFloat(
+                      website.versionmanager!.lighthouse!.performance
+                    )}
+                  />
+                  <span>Performance</span>
+                </div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    placeItems: 'center',
+                  }}
+                >
+                  <Score
+                    score={parseFloat(website.versionmanager!.lighthouse!.seo)}
+                  />
+                  <span>SEO</span>
+                </div>
+              </>
+            )}
           </div>
-        )}
-
-        {hasLighthouse && (
-          <>
-            <div
-              style={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                placeItems: 'center',
-              }}
-            >
-              <Score
-                score={parseFloat(
-                  website.versionmanager!.lighthouse!.accessibility
-                )}
-              />
-              <span>Accessibility</span>
-            </div>
-            <div
-              style={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                placeItems: 'center',
-                textAlign: 'center',
-              }}
-            >
-              <Score
-                score={parseFloat(
-                  website.versionmanager!.lighthouse!.best_practices
-                )}
-              />
-              <span>
-                Best
-                <br />
-                Practices
-              </span>
-            </div>
-            <div
-              style={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                placeItems: 'center',
-              }}
-            >
-              <Score
-                score={parseFloat(
-                  website.versionmanager!.lighthouse!.performance
-                )}
-              />
-              <span>Performance</span>
-            </div>
-            <div
-              style={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                placeItems: 'center',
-              }}
-            >
-              <Score
-                score={parseFloat(website.versionmanager!.lighthouse!.seo)}
-              />
-              <span>SEO</span>
-            </div>
-          </>
+        </div>
+        {website.versionmanager?.system.id && (
+          <img
+            src={`https://be.versionmanager.io/systems/load_screenshot/${website.versionmanager?.system.id}`}
+            style={{
+              marginBottom: 16,
+              borderRadius: 12,
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            }}
+          />
         )}
       </div>
     </div>

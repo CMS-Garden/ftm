@@ -44,16 +44,6 @@ export const NavBar = () => {
         <li>
           <Link to="/about">About Us</Link>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/CMS-Garden/ftm">
-            More Bla bla
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://github.com/CMS-Garden/ftm">
-            And more Bla bla
-          </a>
-        </li>
       </ul>
       <div
         className={`${styles.hamburger} ${styles.hamburgerWrapper}`}

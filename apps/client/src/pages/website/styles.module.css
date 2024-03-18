@@ -8,3 +8,26 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
+.container {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  text-wrap: balance;
+}
+
+.container > img {
+  width: 50%;
+  margin: 0 auto;
+  height: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .container > img {
+    width: 250px;
+  }
+}
