@@ -16,7 +16,8 @@
     "react-dom": "18.2.0",
     "react-router-dom": "6.11.2",
     "react-simple-maps": "^3.0.0",
-    "the-new-css-reset": "^1.11.2"
+    "the-new-css-reset": "^1.11.2",
+    "vite-plugin-ssr": "^0.4.142"
   },
   "devDependencies": {
     "@nx/eslint": "18.1.1",

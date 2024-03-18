@@ -3,20 +3,25 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useDirectus } from '../directus';
 import { WebsiteResponse } from './types';
 
-export const useWebsites = () => {
+export const useWebsite = (domain: string) => {
   const directus = useDirectus();
   const { data } = useSuspenseQuery({
-    queryKey: ['websites'],
+    queryKey: ['websites', domain],
     queryFn: async () => {
       const response = await directus.request(
         readItems('domain' as any, {
-          limit: 9999999,
-          status: {
-            _eq: 'published',
-          },
+          limit: 1,
           deep: {
             state: {},
             category: {},
+          },
+          filter: {
+            status: {
+              _eq: 'published',
+            },
+            url: {
+              _contains: domain,
+            },
           },
           fields: [
             '*',
@@ -35,7 +40,8 @@ export const useWebsites = () => {
           (a: any, b: any) => a.date - b.date
         )?.[0],
       })) as WebsiteResponse[];
-      return withVersionManager;
+      if (!withVersionManager) throw new Error('Website not found.');
+      return withVersionManager[0];
     },
   });
   return data;

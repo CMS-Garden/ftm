@@ -11,6 +11,9 @@ export const useContent = (slug: string, lang: string) => {
         readItems('website_content' as any, {
           filter: {
             page: { _eq: slug },
+            status: {
+              _eq: 'published',
+            },
           },
           ['deep' as any]: {
             ['translations' as any]: {

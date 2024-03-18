@@ -52,7 +52,7 @@ ORDER BY DESC(?bundesland)
 
 DE-domains-public-transport.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q178512.
   wd:Q178512 wdt:P373 ?category.
@@ -73,7 +73,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-schools.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q3914.
   wd:Q3914 wdt:P373 ?category.
@@ -81,26 +81,20 @@ WHERE {
   ?result wdt:P131 ?city.
   ?result wdt:P856 ?website.
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-  MINUS {
-    ?result p:P856 ?website.
-    ?website (ps:P856) <.pdf>.
-  }
-  FILTER NOT EXISTS {?result wdt:P1671 ?route}
-  FILTER NOT EXISTS {?result wdt:P559 ?terminus}
-  FILTER NOT EXISTS {?result wdt:P1545 ?ordinal}
 }
 ORDER BY ASC(?cityLabel)
 ```
 
 DE-domains-universities.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website ?studentsCount
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q875538.
   wd:Q875538 wdt:P373 ?category.
   ?result wdt:P17 wd:Q183.
   ?result wdt:P131 ?city.
   ?result wdt:P856 ?website.
+  ?result wdt:P2196 ?studentsCount
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 ORDER BY ASC(?cityLabel)
@@ -108,7 +102,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-hospitals.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q16917.
   wd:Q16917 wdt:P373 ?category.
@@ -122,7 +116,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-government-agencies.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q327333.
   wd:Q327333 wdt:P373 ?category.
@@ -136,7 +130,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-museums.json query
 ```sparql
-SELECT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q33506.
   wd:Q33506 wdt:P373 ?category.
@@ -150,7 +144,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-theaters.json query
 ```sparql
-SELECT DISTINCT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q24354.
   wd:Q24354 wdt:P373 ?category.
@@ -164,7 +158,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-libraries.json query
 ```sparql
-SELECT DISTINCT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q7075.
   wd:Q7075 wdt:P373 ?category.
@@ -178,7 +172,7 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-police.json query
 ```sparql
-SELECT DISTINCT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q732717.
   wd:Q732717 wdt:P373 ?category.
@@ -192,10 +186,38 @@ ORDER BY ASC(?cityLabel)
 
 DE-domains-fire-departments.json query
 ```sparql
-SELECT DISTINCT ?result ?categoryLabel ?resultLabel ?cityLabel ?website
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
 WHERE {
   ?result wdt:P31/wdt:P279* wd:Q6498663.
   wd:Q6498663 wdt:P373 ?category.
+  ?result wdt:P17 wd:Q183.
+  ?result wdt:P131 ?city.
+  ?result wdt:P856 ?website.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY ASC(?cityLabel)
+```
+
+DE-domains-charitable-organization.json query
+```sparql
+SELECT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
+WHERE {
+  ?result wdt:P31/wdt:P279* wd:Q708676.
+  wd:Q708676 wdt:P373 ?category.
+  ?result wdt:P17 wd:Q183.
+  ?result wdt:P131 ?city.
+  ?result wdt:P856 ?website.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY ASC(?cityLabel)
+```
+
+DE-domains-religious-buildings.json query
+```sparql
+SELECT DISTINCT ?result ?resultLabel ?categoryLabel ?cityLabel ?website
+WHERE {
+  ?result wdt:P31/wdt:P279* wd:Q24398318.
+  wd:Q24398318 wdt:P373 ?category.
   ?result wdt:P17 wd:Q183.
   ?result wdt:P131 ?city.
   ?result wdt:P856 ?website.
@@ -217,4 +239,40 @@ WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 ORDER BY DESC(?population)
+```
+
+DE-domains-city.json query
+```sparql
+SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?categoryLabel
+WHERE {
+  BIND("city" AS ?categoryLabel) .
+  wd:Q183 wdt:P150 ?bundesland.
+  ?bundesland wdt:P150 ?state.
+  ?state wdt:P150 ?area.
+  ?area wdt:P150 ?city.
+  ?city wdt:P31 wd:Q42744322.  
+  ?city wdt:P1082 ?population.
+  ?city wdt:P856 ?website.
+  OPTIONAL { ?city wdt:P2769 ?budget }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY ASC(?cityLabel)
+```
+
+DE-domains-town.json query
+```sparql
+SELECT ?bundeslandLabel ?stateLabel ?areaLabel ?city ?cityLabel ?budget ?website ?population ?categoryLabel
+WHERE {
+  BIND("city" AS ?categoryLabel) .
+  wd:Q183 wdt:P150 ?bundesland.
+  ?bundesland wdt:P150 ?state.
+  ?state wdt:P150 ?area.
+  ?area wdt:P150 ?city. 
+  ?city wdt:P31 wd:Q116457956.
+  ?city wdt:P1082 ?population.
+  ?city wdt:P856 ?website.
+  OPTIONAL { ?city wdt:P2769 ?budget }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+ORDER BY ASC(?cityLabel)
 ```
