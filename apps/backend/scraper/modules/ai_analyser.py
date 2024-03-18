@@ -61,6 +61,9 @@ def get_domain_list():
     df = get_raw_domains_df()
     processed = get_processed_domains_df()
 
+    # Remove duplicates from processed
+    processed = processed.drop_duplicates(subset=['url'])
+
     # Remove the processed domains from the list
     df = df[~df['website'].isin(processed['url'])]
 
@@ -80,6 +83,6 @@ for url in tqdm(urls, desc="Analyzing websites", unit="url"):
     except Exception as e:
         df.loc[len(df)] = [url, '']
     time.sleep(1)
-    df.to_csv('website_descriptions.csv', index=False)
+    df.to_csv('../../data/DE-AI-domains-description.csv', index=False)
 
 
