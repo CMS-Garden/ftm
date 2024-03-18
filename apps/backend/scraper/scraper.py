@@ -1,8 +1,12 @@
+import numpy as np
 from directus_api import DirectusApi
 import pandas as pd
 import json
-import os, dotenv
+import time
+import os, dotenv, re
 from modules.versionmanager_api import VersionmanagerApi
+from cleantext import clean
+
 
 # Load environment variables
 dotenv.load_dotenv()
@@ -15,7 +19,7 @@ api = DirectusApi(username=os.getenv('DIRECTUS_EMAIL'), password=os.getenv('DIRE
                       endpoint=os.getenv('DIRECTUS_URL'))
 
 def get_domain_cities_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -38,7 +42,7 @@ def get_domain_cities_df():
     return filtered_df
 
 def get_states_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -62,7 +66,7 @@ def get_states_df():
     return filtered_df
 
 def get_raw_domains_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -70,7 +74,7 @@ def get_raw_domains_df():
     return df
 
 def get_sites_df():
-    with open('data/2-DE-domains-bundesland.json') as f:
+    with open('../data/2-DE-domains-bundesland.json') as f:
         data = json.load(f)
     df = pd.DataFrame(data)
     df = df[df['website'].notna()]
@@ -94,8 +98,16 @@ def get_systems_from_versionmanager():
 
 def get_systems_df():
     systems = get_systems_from_versionmanager()
-    systems_dict = [item['system'] for item in systems]
-    df = pd.DataFrame(systems_dict)
+    df = pd.DataFrame(systems)
+
+    # Create a new column with the original_url from the systems['system'] list.
+    df['original_url'] = df['system'].apply(lambda x: x['original_url'])
+    df['id'] = df['system'].apply(lambda x: x['id'])
+
+    # Fix columns with numbers as Int64
+    # df['systemtype'] = df['systemtype'].astype('Int64')
+    # df['detected_system_type'] = df['detected_system_type'].astype('Int64')
+    # df['detection_accuracy'] = df['detection_accuracy'].astype('Int64')
     return df
 
 def create_systems_in_versionmanager( domains: list ):
@@ -265,6 +277,14 @@ def update_domains_in_directus():
     # Get data from Directus
     cities = pd.DataFrame(api.get_items(collection="City"))
     states = pd.DataFrame(api.get_items(collection="state"))
+    description = pd.read_csv('../data/DE-AI-domains-description.csv')
+
+    # Rename the description url column to description_url
+    description.rename(columns={'url': 'description_url'}, inplace=True)
+
+    # Fix the description column using the cleanup_string_text_characters() function
+    description = description.drop_duplicates(subset=['description_url'])
+    description['description'] = description['description'].apply(clean, lower=False)
 
     # Get system data from versionmanager
     systems = get_systems_df()
@@ -282,7 +302,7 @@ def update_domains_in_directus():
     domain_data = domain_data.merge(cities[['Name', 'city_id']], left_on='cityLabel', right_on='Name', how='left')
 
     domain_data = domain_data.merge(domains[['url', 'domain_id']], left_on='website', right_on='url', how='left')
-
+    domain_data = domain_data.merge(description[['description_url', 'description']], left_on='website', right_on='description_url', how='left')
 
     # Populate the raw_versionmanager with the systems row as json matching that has the 'original_url' the same as the 'website' in domain_data
     #itterate over the rows in domain_data
@@ -302,11 +322,19 @@ def update_domains_in_directus():
     # Clean up the domain_data
     domain_data['url'] = domain_data['website']
     domain_data['status'] = 'published'
-    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id']]
+    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id', 'description']]
     domain_data = domain_data.rename(columns={'domain_id': 'id'})
 
-    status = api.update_items(collection="domain", items=domain_data.to_dict('records'))
-    print(status.status_code)
+    # Break into 10 item chunks
+    domain_data_chunks = np.array_split(domain_data, len(domain_data) / 10)
+
+    for chunk in domain_data_chunks:
+        try :
+            status = api.update_items(collection="domain", items=chunk.to_dict('records'))
+            print(status.status_code)
+        except:
+            print('Error updating domains in Directus.' + str(chunk))
+
     return
 
 ### Helpers
@@ -316,22 +344,35 @@ def delete_all_items(collection):
     api.delete_all_items_from_collection(collection=collection)
     return
 
+def cleanup_string_text_characters(text):
+    # Remove multiple spaces
+    text = re.sub(' +', ' ', text)
+    # Remove characters that might cause a json error
+    text = text.replace('\"', '\'').replace('“', '\'').replace('”', '\'').replace('’', '\'').replace('‘', '\'')
+    return text
+
+
 if __name__ == '__main__':
+    # Measuring time
+    start = time.time()
     # 1. Get new records from Wikidata (not implemented yet) and store as json files. (can be improved)
 
     # 2. Register new sites in the versionmanager.
-    register_all_sites_in_versionmanager()
+    # register_all_sites_in_versionmanager()
 
     # 3. Publish new data in Directus.
-    register_new_cities_in_directus()
-    register_new_states_in_directus()
-    register_new_domains_in_directus()
+    # register_new_cities_in_directus()
+    # register_new_states_in_directus()
+    # register_new_domains_in_directus()
 
     # 4. Update existing data in Directus.
-    update_all_cities_in_directus()
+    # update_all_cities_in_directus()
     update_domains_in_directus()
 
     #get_systems_df()
     #process_data()
     #delete_all_items('City')
+
+    end = time.time()
+    print(f"Time elapsed: {end - start} seconds")
 
