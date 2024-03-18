@@ -113,7 +113,7 @@ export default function Homepage() {
         </div>
         <div className={styles.hero_text}>
           <h1>
-            How is taxpayer's money being spent on public sector websites?
+            How Is Taxpayer's Money Being Spent On Public Sector Websites?
           </h1>
           {/* <h2>Public Money? Public Code!</h2> */}
           {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
