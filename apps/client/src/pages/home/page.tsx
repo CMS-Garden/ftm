@@ -1,13 +1,14 @@
+import { DonutChart } from '@shopify/polaris-viz';
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Content } from '../../components/Content';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import geoUrl from '../../assets/states.geo.json?url';
 import { useCategories } from '../../lib/data/useCategories';
 import { useWebsites } from '../../lib/data/useWebsites';
-import styles from './style.module.css';
-import { DonutChart } from '@shopify/polaris-viz';
 import { useIsMobile } from '../../lib/useIsMobile';
 import bgImg from '../../assets/money-waste-wide2.jpg';
+import styles from './style.module.css';
 
 const percentageFormatter = new Intl.NumberFormat('de-DE', {
   style: 'percent',
@@ -117,16 +118,17 @@ export default function Homepage() {
           {/* <h2>Public Money? Public Code!</h2> */}
           {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
           <div className="buttons">
-            <a className="button" href="/about">Learn more about the project.</a>
+            <Link className="button" to="/about">
+              Learn more about the project.
+            </Link>
           </div>
           {/* <Content slug="front" /> */}
         </div>
         <div className={styles.hero_graph}>
-          Map Visualization here
+          <StateMap />
         </div>
       </div>
       <div className={styles.content}>
-
         <span
           style={{
             display: 'block',
@@ -263,21 +265,25 @@ export default function Homepage() {
                 },
                 headerName: 'Website',
               },
-              { field: 'city_id.Name',
+              {
+                field: 'city_id.Name',
                 tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item'
+                  return 'Double click to navigate to the selected item';
                 },
-                headerName: 'City' },
-              { field: 'state_id.name',
+                headerName: 'City',
+              },
+              {
+                field: 'state_id.name',
                 tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item'
+                  return 'Double click to navigate to the selected item';
                 },
-                headerName: 'State' },
+                headerName: 'State',
+              },
               {
                 field: 'versionmanager.system_type_group.group_name',
                 headerName: 'System',
                 tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item'
+                  return 'Double click to navigate to the selected item';
                 },
                 cellRenderer: (params: any) => {
                   if (!params.data.versionmanager?.system_type_group) {
@@ -313,7 +319,7 @@ export default function Homepage() {
                 field: 'versionmanager.lighthouse.performance',
                 headerName: 'Performance',
                 tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item'
+                  return 'Double click to navigate to the selected item';
                 },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
@@ -337,7 +343,7 @@ export default function Homepage() {
                 field: 'versionmanager.lighthouse.accessibility',
                 headerName: 'Accessibility',
                 tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item'
+                  return 'Double click to navigate to the selected item';
                 },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
@@ -385,11 +391,46 @@ export default function Homepage() {
       <footer>
         <nav aria-labelledby="footer-navigation">
           <ul>
-            <li><a href="/imprint">Imprint</a></li>
-            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li>
+              <a href="/imprint">Imprint</a>
+            </li>
+            <li>
+              <a href="/privacy-policy">Privacy Policy</a>
+            </li>
           </ul>
         </nav>
       </footer>
     </>
   );
 }
+
+const StateMap = () => {
+  const websites = useWebsites();
+  return (
+    <ComposableMap
+      projectionConfig={{
+        scale: 4750,
+        center: [10.5, 51.06],
+      }}
+    >
+      <Geographies geography={geoUrl}>
+        {({ geographies }) =>
+          geographies.map((geo) => {
+            const site = websites.find((w) =>
+              geo.properties.nameEng?.includes(w.state_id?.name)
+            );
+            const hasData = !!site?.versionmanager?.system_type_group;
+            return (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                fill="#DDDDDD80"
+                stroke="#DDD"
+              />
+            );
+          })
+        }
+      </Geographies>
+    </ComposableMap>
+  );
+};

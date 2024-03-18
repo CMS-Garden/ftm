@@ -7,12 +7,6 @@ import styles from './style.module.css';
 import { useWebsites } from '../../lib/data/useWebsites';
 import { AgGridReact } from 'ag-grid-react';
 
-const color = '#17A34A';
-const setOpacity = (color: string, opacity: number) => {
-  const opacityHex = Math.round(255 * opacity).toString(16);
-  return `${color}${opacityHex}`;
-};
-
 const percentageFormatter = new Intl.NumberFormat('de-DE', {
   style: 'percent',
 });

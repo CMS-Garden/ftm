@@ -1,5 +1,10 @@
 .main {
   max-width: 900px;
   padding: 8px;
-  margin: 0 auto;
+  margin: 20px auto;
+}
+
+.main > h1 {
+  font-size: 2rem;
+  font-weight: bold;
 }
