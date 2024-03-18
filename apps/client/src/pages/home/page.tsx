@@ -101,13 +101,21 @@ export default function Homepage() {
 
   return (
     <>
-      <div className={styles.content}>
-        <div className={styles.hero}>
+      <div className={styles.hero}>
+        <div className={styles.hero_text}>
           <h1>
-            <span>💸</span> Follow The Money
+            How is taxpayer's money being spent on public sector websites?
           </h1>
-          <Content slug="front" />
+          <h2>Public Money? Public Code!</h2>
+          {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
+          <a href="/about">Learn more about the project.</a>
+          {/* <Content slug="front" /> */}
         </div>
+        <div className={styles.hero_graph}>
+          Map Visualization here
+        </div>
+      </div>
+      <div className={styles.content}>
 
         <span
           style={{
@@ -118,8 +126,9 @@ export default function Homepage() {
             fontWeight: 500,
           }}
         >
-          <span>💸</span> {vulnerableWebsitecount} vulnerable website
-          {vulnerableWebsitecount === 1 ? '' : 's'}
+          Distribution of CMS Types
+          {/* <span>💸</span> {vulnerableWebsitecount} vulnerable website
+          {vulnerableWebsitecount === 1 ? '' : 's'} */}
         </span>
 
         <div className={styles.chartContainer}>

@@ -5,32 +5,44 @@
 
 .hero {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   text-wrap: balance;
+  background: blue;
   gap: 20px;
   margin-bottom: 2rem;
+  min-height: 80vh;
+
 }
 
-.hero > h1 {
+@media screen and (min-width: 992px) {
+  .hero {
+    padding: 0 4rem;
+  }
+}
+
+
+.hero_text, .hero_graph {
+  flex: 1;
+}
+
+.hero_text {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  text-wrap: pretty;
+  text-align: left;
+  color: white;
+}
+
+.hero h1 {
   font-size: 3rem;
   font-weight: 600;
-  background: linear-gradient(to bottom right, #17a34a, #079669);
-  background-clip: text;
-  color: transparent;
-}
-
-.hero > h1 > span {
-  color: black;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  font-weight: 300;
-  max-width: 600px;
-  text-wrap: pretty;
+  text-align: left;
+  color: white;
 }
 
 .search {
