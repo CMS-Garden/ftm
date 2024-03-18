@@ -3,6 +3,13 @@
 2. Copy the `.env.example` file to `.env` and fill in the necessary information
 3. Run the scrapping python script
 
+## Scraper
+The scrapper is a python script that aggregates data from multiple [data sources](#datasource) and registers the right entries in the Directus collections while adding relations between them. 
+
+## The AI description generator
+The AI description generator is a python script that uses an [ollama](https://ollama.com) sdk and a local model to generate a description for each domain in the collection. 
+The descriptions are saved in a DE-AI-domains-description.csv file in the data folder.
+
 ## Datasource
 The datasource was gathered from (WikiData)[https://query.wikidata.org/]
 
