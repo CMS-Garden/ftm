@@ -1,4 +1,5 @@
 import { NavBar } from '../components/NavBar';
+import { Footer } from '../components/Footer';
 import { Outlet } from 'react-router-dom';
 import styles from './style.module.css';
 import { Suspense } from 'react';
@@ -24,6 +25,7 @@ export default function MainLayout() {
           <Outlet />
         </main>
       </Suspense>
+       <Footer/>
     </div>
   );
 }

@@ -68,3 +68,32 @@ body {
   font-weight: 700;
   src: url('./assets/fonts/montserrat-v26-latin-700italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
+
+p {
+  line-height:1.5;
+  margin-bottom:1rem;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  width: auto;
+  padding: 1rem 1.2rem 1rem;
+  cursor: pointer;
+  background-color: #ffe54c;
+  color: black;
+}
+
+
+
+@media (min-width: 768px) {
+  .button {
+    font-size: 1.2rem;
+  }
+
+  .button:hover {
+    background-color: #fff09a;
+  }
+}

@@ -1,15 +1,61 @@
 .navbar {
   position: relative;
   background-color: black;
+  padding: 0.5rem 0.8rem 1rem 1rem;
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .navbar > ul {
   display: flex;
   align-items: center;
   height: 60px;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 20px;
+  max-width: 1280px;
+  padding: 0 2rem;
+  list-style: none;
+}
+
+.navbar > ul > li a {
+  display: block;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+  text-decoration: none;
+}
+.navbar > ul > li a:hover {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .navbar > ul {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .navbar > ul {
+    display: none;
+  }
+  .navbar > ul > li {
+    display: block;
+    line-height: 1.5;
+    margin: 1rem 0;
+  }
+
+  .navbarOpen > ul {
+    display: inline;
+    background-color: #333;
+    height: 100vh;
+    width: 50vw;
+    top: 74px;
+    right: 0;
+    position: absolute;
+    padding: 1rem;
+    z-index: 9;
+  }
 }
 
 .logo {
@@ -17,7 +63,7 @@
   font-size: 1.2rem;
   color: #333;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
 }
 
@@ -27,11 +73,14 @@
 
 .links {
   margin-left: auto;
+  display: flex;
+  gap: 1rem;
 }
 
 .links a {
   display: inline-block;
   font-weight: 700;
+  color: #fff;
 }
 
 .links a::after {
@@ -40,7 +89,7 @@
   width: 0;
   height: 3px;
   background: #000;
-  transition: width .3s;
+  transition: width 0.3s;
 }
 
 .links > a:hover {
@@ -50,4 +99,56 @@
 .links > a:hover::after {
   text-decoration: none;
   width: 100%;
+}
+
+@media (max-width: 767px) {
+  .hamburger {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: space-around;
+    flex-flow: column nowrap;
+    z-index: 10;
+    margin-left: auto;
+    overflow: hidden;
+  }
+
+  .hamburgerWrapper {
+    margin-top: 0.6rem;
+  }
+
+  .burger {
+    width: 2rem;
+    height: 0.25rem;
+    border-radius: 10px;
+    background-color: currentColor;
+    transform-origin: 1px;
+    transition: all 0.3s linear;
+  }
+
+  .burger1 {
+    transform: rotate(0);
+  }
+
+  .burger2 {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .burger3 {
+    transform: rotate(0);
+  }
+
+  .hamburger.open .burger1 {
+    transform: rotate(45deg);
+  }
+
+  .hamburger.open .burger2 {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .hamburger.open .burger3 {
+    transform: rotate(-45deg);
+  }
 }

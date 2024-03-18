@@ -1,0 +1,28 @@
+.siteFooter{
+    background-color:#000;
+    padding:1.5rem;
+    color:#fff;
+}
+
+.siteFooterInner{
+   max-width:1280px;
+    margin:0 auto;
+    text-align: center;
+}
+
+.siteFooterInner a{
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.siteFooterInner a:hover{
+    opacity: 1;
+}
+
+
+.siteFooterInner ul li {
+    display:inline;
+
+    margin: 0 1rem;
+}
