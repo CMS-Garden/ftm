@@ -149,7 +149,7 @@ export default function Homepage() {
               data={chartdata}
               legendPosition={isMobile ? 'bottom' : 'left'}
               renderInnerValueContent={({ activeValue, totalValue }) => {
-                if (!activeValue) return '';
+                if (!activeValue) return totalValue;
                 return (
                   <>
                     <span>
@@ -170,7 +170,7 @@ export default function Homepage() {
               data={opensourceData}
               legendPosition={isMobile ? 'bottom' : 'right'}
               renderInnerValueContent={({ activeValue, totalValue }) => {
-                if (!activeValue) return '';
+                if (!activeValue) return totalValue;
                 return (
                   <>
                     <span>
@@ -406,6 +406,20 @@ export default function Homepage() {
 
 const StateMap = () => {
   const websites = useWebsites();
+  const openSourcePerState = useMemo(
+    () =>
+      websites.reduce((acc, pre) => {
+        const state = pre.state_id?.name ?? 'unknown';
+        const obj = acc[state] ?? { open: 0, closed: 0 };
+        if (pre.versionmanager?.system_type_group?.is_open_source) {
+          obj.open++;
+        } else {
+          obj.closed++;
+        }
+        return { ...acc, [state]: obj };
+      }, {} as Record<string, { open: number; closed: number }>),
+    [websites]
+  );
   return (
     <ComposableMap
       projectionConfig={{
@@ -419,12 +433,18 @@ const StateMap = () => {
             const site = websites.find((w) =>
               geo.properties.nameEng?.includes(w.state_id?.name)
             );
-            const hasData = !!site?.versionmanager?.system_type_group;
+            const open = openSourcePerState[site?.state_id?.name ?? 'unknown'];
             return (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
-                fill="#DDDDDD80"
+                fill={
+                  open
+                    ? open.open > open.closed
+                      ? '#119F56F0'
+                      : '#DC2625F0'
+                    : '#DDDDDD80'
+                }
                 stroke="#DDD"
               />
             );
