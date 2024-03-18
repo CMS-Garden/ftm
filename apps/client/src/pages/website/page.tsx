@@ -68,6 +68,8 @@ const View = ({ domain }: { domain: string }) => {
           </>
         )}
       </ul>
+
+      <p>{website.description}</p>
     </div>
   );
 };

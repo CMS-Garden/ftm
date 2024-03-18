@@ -11,6 +11,7 @@ export interface WebsiteResponse {
   siwecos_score: any;
   raw_versionmanager?: string;
   state_id: StateId;
+  description?: string;
   category_id?: CategoryId;
   city_id?: CityId;
   agency_id: any;

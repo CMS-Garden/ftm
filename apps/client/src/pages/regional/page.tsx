@@ -1,9 +1,11 @@
 import { DonutChart } from '@shopify/polaris-viz';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import geoUrl from '../../assets/germany.geo.json?url';
 import styles from './style.module.css';
+import { useWebsites } from '../../lib/data/useWebsites';
+import { AgGridReact } from 'ag-grid-react';
 
 const color = '#17A34A';
 const setOpacity = (color: string, opacity: number) => {
@@ -11,12 +13,85 @@ const setOpacity = (color: string, opacity: number) => {
   return `${color}${opacityHex}`;
 };
 
+const percentageFormatter = new Intl.NumberFormat('de-DE', {
+  style: 'percent',
+});
+
 export default function Map() {
-  const { city } = useParams();
+  const { region } = useParams();
   const navigate = useNavigate();
   const [hovered, setHovered] = useState<string | null>(null);
+  const websites = useWebsites();
+  const stateWebsites = useMemo(
+    () => websites.filter((website) => website.state_id.name === region),
+    [websites, region]
+  );
+  const chartdata = useMemo(() => {
+    const data = stateWebsites.filter(
+      (w) => !!w.versionmanager?.system_type_group
+    );
+    return data.reduce(
+      (acc, pre) => {
+        const name =
+          pre.versionmanager?.system_type_group?.group_name ?? 'unknown';
+        const obj = acc.find((p) => p.name === name) ?? {
+          name,
+          data: [{ key: 'now', value: 0 }],
+        };
+        obj.data[0].value++;
+        return [...acc.filter((p) => p.name !== name), obj];
+      },
+      [] as {
+        name: string;
+        data: [
+          {
+            key: 'now';
+            value: number;
+          }
+        ];
+      }[]
+    );
+  }, [stateWebsites]);
 
-  if (!city) {
+  const opensourceData = useMemo(() => {
+    return stateWebsites
+      .filter((w) => !!w.versionmanager?.system_type_group)
+      .reduce(
+        ([open, closed], pre) => {
+          if (!pre.versionmanager?.system_type_group?.is_open_source) {
+            return [
+              open,
+              {
+                ...closed,
+                data: [{ value: closed.data[0].value + 1, key: 'now' }],
+              },
+            ];
+          } else {
+            return [
+              {
+                ...open,
+                data: [{ value: open.data[0].value + 1, key: 'now' }],
+              },
+              closed,
+            ];
+          }
+        },
+        [
+          {
+            name: 'Open Source',
+            data: [{ value: 0, key: 'now' }],
+            color: '#119F56',
+          },
+          {
+            name: 'Closed Source',
+            data: [{ value: 0, key: 'now' }],
+            color: '#DC2625',
+          },
+        ]
+      );
+  }, [stateWebsites]);
+
+  if (!region || !stateWebsites.length) {
     navigate('/');
     return null;
   }
@@ -24,7 +99,7 @@ export default function Map() {
   return (
     <div className={styles.root}>
       <h1 className={styles.headline}>
-        {city[0].toUpperCase() + city.slice(1)}
+        {region[0].toUpperCase() + region.slice(1)}
       </h1>
       <div className={styles.grid}>
         <div className={styles.piechartContainer}>
@@ -45,26 +120,7 @@ export default function Map() {
                   </>
                 );
               }}
-              data={[
-                {
-                  data: [
-                    {
-                      key: 'april - march',
-                      value: 50000,
-                    },
-                  ],
-                  name: 'Drupal',
-                },
-                {
-                  data: [
-                    {
-                      key: 'april - march',
-                      value: 25000,
-                    },
-                  ],
-                  name: 'Wordpress',
-                },
-              ]}
+              data={chartdata}
             />
           </div>
         </div>
@@ -87,28 +143,7 @@ export default function Map() {
                   </>
                 );
               }}
-              data={[
-                {
-                  data: [
-                    {
-                      key: 'april - march',
-                      value: 50000,
-                    },
-                  ],
-                  name: 'Open',
-                  color: '#17A34A',
-                },
-                {
-                  data: [
-                    {
-                      key: 'april - march',
-                      value: 25000,
-                    },
-                  ],
-                  name: 'Closed',
-                  color: '#DC2625',
-                },
-              ]}
+              data={opensourceData}
             />
           </div>
         </div>
@@ -126,46 +161,155 @@ export default function Map() {
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
-                geographies.map((geo) => (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    onMouseEnter={(e) => setHovered(geo.properties.cityName)}
-                    onClick={() => console.log(geo)}
-                    style={{
-                      default: {
-                        fill: setOpacity(color, Math.random()),
-                        ...(geo.properties.cityName.toLowerCase() ===
-                        city.toLowerCase()
-                          ? {
-                              strokeWidth: 2,
-                              stroke: 'red',
-                              zIndex: 10,
-                            }
-                          : {}),
-                      },
-                    }}
-                  />
-                ))
+                geographies.map((geo) => {
+                  const site = websites.find((w) =>
+                    geo.properties.cityName.includes(w.city_id?.Name)
+                  );
+                  const hasData = !!site?.versionmanager?.system_type_group;
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      onMouseEnter={(e) => setHovered(geo.properties.cityName)}
+                      onClick={() => console.log(geo)}
+                      style={{
+                        default: {
+                          fill:
+                            geo.properties.stateNameEng === region
+                              ? hasData
+                                ? site?.versionmanager?.system_type_group
+                                    ?.is_open_source
+                                  ? '#119F56'
+                                  : '#DC2625'
+                                : '#D6D6DA'
+                              : '#D6D6DA20',
+                        },
+                      }}
+                    />
+                  );
+                })
               }
             </Geographies>
           </ComposableMap>
         </div>
-        <ul className={styles.links}>
-          <span>Websites found in that region</span>
-          <li>
-            <a href="https://www.drupal.org/">Drupal</a>
-          </li>
-          <li>
-            <a href="https://wordpress.org/">Wordpress</a>
-          </li>
-          <li>
-            <a href="https://www.shopify.com/">Shopify</a>
-          </li>
-          <li>
-            <a href="https://github.com/CMS-Garden/ftm">GitHub</a>
-          </li>
-        </ul>
+        <div className={styles.table}>
+          <AgGridReact
+            rowData={stateWebsites}
+            columnDefs={[
+              {
+                field: 'url',
+                cellRenderer: (params: any) => {
+                  return (
+                    <a
+                      href={params.value}
+                      style={{
+                        color: '#2b6cb0',
+                        display: 'flex',
+                        gap: '4px',
+                        alignItems: 'center',
+                      }}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {params.data?.versionmanager?.system?.favicon && (
+                        <img
+                          src={params.data.versionmanager.system.favicon}
+                          alt="favicon"
+                        />
+                      )}
+                      {params.value}
+                    </a>
+                  );
+                },
+                headerName: 'Website',
+              },
+              { field: 'city_id.Name', headerName: 'City' },
+              { field: 'state_id.name', headerName: 'State' },
+              {
+                field: 'versionmanager.system_type_group.group_name',
+                headerName: 'System',
+                cellRenderer: (params: any) => {
+                  if (!params.data.versionmanager?.system_type_group) {
+                    return 'Unknown';
+                  }
+
+                  return (
+                    <span
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      {params.data.versionmanager.system_type_group.icon && (
+                        <img
+                          src={
+                            params.data.versionmanager.system_type_group.icon
+                          }
+                          alt={params.value}
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                          }}
+                        />
+                      )}
+                      {params.value}
+                    </span>
+                  );
+                },
+              },
+              {
+                field: 'versionmanager.lighthouse.performance',
+                headerName: 'Performance',
+                cellRenderer: (params: any) => {
+                  if (!params.value) return 'Unknown';
+                  return (
+                    <span
+                      style={{
+                        color:
+                          params.value < 0.5
+                            ? '#991B1B'
+                            : params.value < 0.8
+                            ? '#92400D'
+                            : '#166434',
+                      }}
+                    >
+                      {percentageFormatter.format(params.value)}
+                    </span>
+                  );
+                },
+              },
+              {
+                field: 'versionmanager.lighthouse.accessibility',
+                headerName: 'Accessibility',
+                cellRenderer: (params: any) => {
+                  if (!params.value) return 'Unknown';
+                  return (
+                    <span
+                      style={{
+                        color:
+                          params.value < 0.5
+                            ? '#991B1B'
+                            : params.value < 0.8
+                            ? '#92400D'
+                            : '#166434',
+                      }}
+                    >
+                      {percentageFormatter.format(params.value)}
+                    </span>
+                  );
+                },
+              },
+            ]}
+            className="ag-theme-quartz"
+            suppressExcelExport={true}
+            onRowDoubleClicked={(e) => {
+              if (!e.data) return;
+              const domain = new URL(e.data.url).hostname;
+              navigate(`/website/${domain}`);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
