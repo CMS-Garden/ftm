@@ -7,6 +7,7 @@ import { useWebsites } from '../../lib/data/useWebsites';
 import styles from './style.module.css';
 import { DonutChart } from '@shopify/polaris-viz';
 import { useIsMobile } from '../../lib/useIsMobile';
+import bgImg from '../../assets/money-waste-wide2.jpg';
 
 const percentageFormatter = new Intl.NumberFormat('de-DE', {
   style: 'percent',
@@ -106,11 +107,14 @@ export default function Homepage() {
   return (
     <>
       <div className={styles.hero}>
+        <div className={styles.hero_bg}>
+          <img src={bgImg} />
+        </div>
         <div className={styles.hero_text}>
           <h1>
             How is taxpayer's money being spent on public sector websites?
           </h1>
-          <h2>Public Money? Public Code!</h2>
+          {/* <h2>Public Money? Public Code!</h2> */}
           {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
           <div class="buttons">
             <a class="button" href="/about">Learn more about the project.</a>
