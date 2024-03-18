@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import logoImg from '../assets/logo-small-negative.svg';
+import home from '../assets/home.svg';
 import Hamburger from './Hamburger';
 
 export const NavBar = () => {
@@ -27,7 +28,17 @@ export const NavBar = () => {
       </Link>
       <ul className={styles.links}>
         <li>
-          <a target="_blank" href="https://github.com/CMS-Garden/ftm">
+          <a title="home" href="/">
+            <img
+                src={home}
+                height="17"
+                alt="Home"
+                title="Home"
+            />
+          </a>
+        </li>
+        <li>
+          <a title="GitHub" target="_blank" href="https://github.com/CMS-Garden/ftm">
             GitHub
           </a>
         </li>
@@ -46,10 +57,10 @@ export const NavBar = () => {
         </li>
       </ul>
       <div
-        className={`${styles.hamburger} ${styles.hamburgerWrapper}`}
-        onClick={toggleHamburger}
+          className={`${styles.hamburger} ${styles.hamburgerWrapper}`}
+          onClick={toggleHamburger}
       >
-        <Hamburger isOpen={hamburgerOpen} />
+      <Hamburger isOpen={hamburgerOpen} />
       </div>
     </nav>
   );

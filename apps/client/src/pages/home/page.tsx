@@ -116,8 +116,8 @@ export default function Homepage() {
           </h1>
           {/* <h2>Public Money? Public Code!</h2> */}
           {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
-          <div class="buttons">
-            <a class="button" href="/about">Learn more about the project.</a>
+          <div className="buttons">
+            <a className="button" href="/about">Learn more about the project.</a>
           </div>
           {/* <Content slug="front" /> */}
         </div>
@@ -263,11 +263,22 @@ export default function Homepage() {
                 },
                 headerName: 'Website',
               },
-              { field: 'city_id.Name', headerName: 'City' },
-              { field: 'state_id.name', headerName: 'State' },
+              { field: 'city_id.Name',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
+                headerName: 'City' },
+              { field: 'state_id.name',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
+                headerName: 'State' },
               {
                 field: 'versionmanager.system_type_group.group_name',
                 headerName: 'System',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.data.versionmanager?.system_type_group) {
                     return 'Unknown';
@@ -301,6 +312,9 @@ export default function Homepage() {
               {
                 field: 'versionmanager.lighthouse.performance',
                 headerName: 'Performance',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
                   return (
@@ -322,6 +336,9 @@ export default function Homepage() {
               {
                 field: 'versionmanager.lighthouse.accessibility',
                 headerName: 'Accessibility',
+                tooltipValueGetter: (params: any) => {
+                  return 'Double click to navigate to the selected item'
+                },
                 cellRenderer: (params: any) => {
                   if (!params.value) return 'Unknown';
                   return (
