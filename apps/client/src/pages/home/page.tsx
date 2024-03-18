@@ -112,7 +112,9 @@ export default function Homepage() {
           </h1>
           <h2>Public Money? Public Code!</h2>
           {/* <p>We follow the money, analyzing a growing list of websites for open source usage and other meaningful criteria to promote transparency.</p> */}
-          <a href="/about">Learn more about the project.</a>
+          <div class="buttons">
+            <a class="button" href="/about">Learn more about the project.</a>
+          </div>
           {/* <Content slug="front" /> */}
         </div>
         <div className={styles.hero_graph}>

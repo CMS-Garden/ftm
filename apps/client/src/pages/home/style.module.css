@@ -5,20 +5,25 @@
 
 .hero {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   text-wrap: balance;
+  line-height: 1.3;
   background: blue;
   gap: 20px;
   margin-bottom: 2rem;
-  min-height: 80vh;
+  padding: 1rem;
 
 }
 
 @media screen and (min-width: 992px) {
   .hero {
+    flex-direction: row;
     padding: 0 4rem;
+    height: 80vh;
+    max-height: 600px;
   }
 }
 
@@ -39,10 +44,16 @@
 }
 
 .hero h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 600;
   text-align: left;
   color: white;
+}
+
+@media screen and (min-width: 992px) {
+  .hero h1 {
+    font-size: 3rem;
+  }
 }
 
 .search {
