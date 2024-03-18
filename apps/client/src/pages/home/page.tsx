@@ -378,14 +378,6 @@ export default function Homepage() {
           ))}
         </div>
       </div>
-      <footer>
-        <nav aria-labelledby="footer-navigation">
-          <ul>
-            <li><a href="/imprint">Imprint</a></li>
-            <li><a href="/privacy-policy">Privacy Policy</a></li>
-          </ul>
-        </nav>
-      </footer>
     </>
   );
 }
