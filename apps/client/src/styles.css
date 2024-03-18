@@ -73,3 +73,24 @@ p {
   line-height:1.5;
   margin-bottom:1rem;
 }
+
+.button {
+  position: relative;
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  width: auto;
+  padding: 1rem 1.2rem 1rem;
+  cursor: pointer;
+  background-color: #ffe54c;
+  color: black;
+}
+
+.button:hover {
+
+}
+
+@media (min-width: 768px) {
+  .button {
+  }
+}
