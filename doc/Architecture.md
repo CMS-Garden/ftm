@@ -9,7 +9,7 @@
 
 Backend workflow to scrape data:
 ![Sequence diagram backend](image/Architecture_C4_SequenceDiagramBackend.png)
-
+<br><br>
 Frontend workflow to view data:
 ![Sequence diagram frontend](image/Architecture_C4_SequenceDiagramFrontend.png)
 
