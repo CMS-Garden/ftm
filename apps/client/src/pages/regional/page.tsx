@@ -6,6 +6,7 @@ import geoUrl from '../../assets/germany.geo.json?url';
 import styles from './style.module.css';
 import { useWebsites } from '../../lib/data/useWebsites';
 import { AgGridReact } from 'ag-grid-react';
+import { Link } from 'react-router-dom';
 
 const percentageFormatter = new Intl.NumberFormat('de-DE', {
   style: 'percent',
@@ -91,6 +92,7 @@ export default function Map() {
   }
 
   return (
+    <>
     <div className={styles.root}>
       <h1 className={styles.headline}>
         {region[0].toUpperCase() + region.slice(1)}
@@ -306,5 +308,7 @@ export default function Map() {
         </div>
       </div>
     </div>
+    <Link className={styles.back} to="/">Back</Link>
+    </>
   );
 }

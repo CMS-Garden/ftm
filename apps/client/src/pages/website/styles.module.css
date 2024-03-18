@@ -31,3 +31,12 @@
     width: 250px;
   }
 }
+
+.back {
+  margin-left: 2.2rem;
+  background-color: #333300;
+  color: #fafafa;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}

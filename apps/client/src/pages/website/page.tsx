@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useWebsite } from '../../lib/data/useWebsite';
 import styles from './styles.module.css';
+import { Link } from 'react-router-dom';
 
 export default function DomainView() {
   const { domain } = useParams();
@@ -23,6 +24,7 @@ const View = ({ domain }: { domain: string }) => {
   const hasSystemType = !!website.versionmanager?.system_type;
   const hasLighthouse = !!website.versionmanager?.lighthouse;
   return (
+    <>
     <div className={styles.main}>
       <h1>
         {website.versionmanager?.system.favicon && (
@@ -139,6 +141,8 @@ const View = ({ domain }: { domain: string }) => {
         )}
       </div>
     </div>
+    <Link className={styles.back} to="/">Back</Link>
+    </>
   );
 };
 
