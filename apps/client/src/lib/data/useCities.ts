@@ -10,6 +10,9 @@ export const useCities = () => {
       const response = (await directus.request(
         readItems('City' as any, {
           limit: 999999999,
+          status: {
+            _eq: 'published',
+          },
         })
       )) as {
         Name: string;

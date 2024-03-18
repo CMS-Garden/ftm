@@ -8,7 +8,13 @@ export const useCategories = () => {
     queryKey: ['categories'],
     queryFn: async () => {
       const response = (await directus.request(
-        readItems('category' as any, {})
+        readItems('category' as any, {
+          filter: {
+            status: {
+              _eq: 'published',
+            },
+          },
+        })
       )) as {
         name: string;
         id: number;

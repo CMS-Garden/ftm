@@ -11,6 +11,9 @@ export const useWebsites = () => {
       const response = await directus.request(
         readItems('domain' as any, {
           limit: 9999999,
+          status: {
+            _eq: 'published',
+          },
           deep: {
             state: {},
             category: {},

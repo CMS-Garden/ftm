@@ -16,6 +16,9 @@ export const useWebsite = (domain: string) => {
             category: {},
           },
           filter: {
+            status: {
+              _eq: 'published',
+            },
             url: {
               _contains: domain,
             },
