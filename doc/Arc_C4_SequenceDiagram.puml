@@ -1,0 +1,61 @@
+@startuml
+
+' entities
+actor       Citizen     as citizen
+boundary    Frontend    as frontend
+participant CMS         as cms
+database    Database    as db
+
+' relations
+citizen -> frontend : view district
+
+activate cms #FFBBBB
+frontend -> cms : get district webpages
+cms -> db : 
+db --> cms : 
+cms --> frontend : Provide district webpages
+deactivate cms
+
+frontend --> citizen 
+
+@enduml
+
+
+
+@startuml
+
+' entities
+boundary "Knowledge Base"   as wikidata
+boundary "Web Analyzing Service" as s1
+
+participant "Data Scraper"  as data_scraper
+participant "Page Summarizer AI/LLM" as page_summarizer_llm
+participant CMS         as cms
+database    Database    as db
+
+
+' relations
+activate data_scraper #FFBBBB
+activate wikidata
+data_scraper -> wikidata : get gov webpages
+deactivate wikidata
+activate s1
+wikidata --> data_scraper
+data_scraper -> s1 : send list of webpages
+s1 --> data_scraper : provide software info
+data_scraper -> cms : 
+deactivate s1
+
+activate page_summarizer_llm
+data_scraper -> page_summarizer_llm : screen scrape
+page_summarizer_llm --> data_scraper : webpage content summary
+data_scraper -> cms : 
+deactivate page_summarizer_llm
+
+data_scraper -> cms
+cms -> db : store scraped info
+
+deactivate data_scraper
+
+
+@enduml
