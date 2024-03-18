@@ -38,7 +38,13 @@ const View = ({ domain }: { domain: string }) => {
 
       <div className={styles.container}>
         <div>
-          <p>{website.description}</p>
+          <p>
+            {website.description} <i>(AI Generated)</i>
+          </p>
+
+          <a target="_blank" href={website.url}>
+            Visit website
+          </a>
 
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {hasSystemType && (

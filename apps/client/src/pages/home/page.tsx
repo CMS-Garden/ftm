@@ -268,24 +268,15 @@ export default function Homepage() {
               },
               {
                 field: 'city_id.Name',
-                tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item';
-                },
                 headerName: 'City',
               },
               {
                 field: 'state_id.name',
-                tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item';
-                },
                 headerName: 'State',
               },
               {
                 field: 'versionmanager.system_type_group.group_name',
                 headerName: 'System',
-                tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item';
-                },
                 cellRenderer: (params: any) => {
                   if (!params.data.versionmanager?.system_type_group) {
                     return 'Unknown';
@@ -312,30 +303,6 @@ export default function Homepage() {
                         />
                       )}
                       {params.value}
-                    </span>
-                  );
-                },
-              },
-              {
-                field: 'versionmanager.lighthouse.performance',
-                headerName: 'Performance',
-                tooltipValueGetter: (params: any) => {
-                  return 'Double click to navigate to the selected item';
-                },
-                cellRenderer: (params: any) => {
-                  if (!params.value) return 'Unknown';
-                  return (
-                    <span
-                      style={{
-                        color:
-                          params.value < 0.5
-                            ? '#991B1B'
-                            : params.value < 0.8
-                            ? '#92400D'
-                            : '#166434',
-                      }}
-                    >
-                      {percentageFormatter.format(params.value)}
                     </span>
                   );
                 },
@@ -369,7 +336,7 @@ export default function Homepage() {
             onGridReady={onGridReady}
             quickFilterText={search}
             suppressExcelExport={true}
-            onRowDoubleClicked={(e) => {
+            onRowClicked={(e) => {
               if (!e.data) return;
               const domain = new URL(e.data.url).hostname;
               navigate(`/website/${domain}`);

@@ -255,27 +255,6 @@ export default function Map() {
                 },
               },
               {
-                field: 'versionmanager.lighthouse.performance',
-                headerName: 'Performance',
-                cellRenderer: (params: any) => {
-                  if (!params.value) return 'Unknown';
-                  return (
-                    <span
-                      style={{
-                        color:
-                          params.value < 0.5
-                            ? '#991B1B'
-                            : params.value < 0.8
-                            ? '#92400D'
-                            : '#166434',
-                      }}
-                    >
-                      {percentageFormatter.format(params.value)}
-                    </span>
-                  );
-                },
-              },
-              {
                 field: 'versionmanager.lighthouse.accessibility',
                 headerName: 'Accessibility',
                 cellRenderer: (params: any) => {
@@ -299,7 +278,7 @@ export default function Map() {
             ]}
             className="ag-theme-quartz"
             suppressExcelExport={true}
-            onRowDoubleClicked={(e) => {
+            onRowClicked={(e) => {
               if (!e.data) return;
               const domain = new URL(e.data.url).hostname;
               navigate(`/website/${domain}`);
