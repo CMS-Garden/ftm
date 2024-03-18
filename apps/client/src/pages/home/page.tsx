@@ -126,6 +126,7 @@ export default function Homepage() {
         </div>
         <div className={styles.hero_graph}>
           <StateMap />
+          <legend>Use of Open Source for Public Sector Websites</legend>
         </div>
       </div>
       <div className={styles.content}>
@@ -441,8 +442,8 @@ const StateMap = () => {
                 fill={
                   open
                     ? open.open > open.closed
-                      ? '#119F56F0'
-                      : '#DC2625F0'
+                      ? '#47f23599'
+                      : '#ff0d117d'
                     : '#DDDDDD80'
                 }
                 stroke="#DDD"

@@ -57,6 +57,29 @@
   color: white;
 }
 
+.hero_graph {
+  margin-top: 2rem;
+}
+
+.hero_graph svg {
+  width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+  .hero_graph {
+    margin-top: 0;
+  }
+
+  .hero_graph svg {
+    width: 70%;
+  }
+}
+
+
+.hero_graph legend {
+  margin-top: 1rem;
+}
+
 .hero_text {
   display: flex;
   flex-direction: column;
@@ -73,6 +96,7 @@
   font-size: 1.6rem;
   font-weight: 600;
   text-align: left;
+  line-height: 1.2;
   color: white;
 }
 
