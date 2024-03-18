@@ -3,8 +3,10 @@ from directus_api import DirectusApi
 import pandas as pd
 import json
 import time
-import os, dotenv
+import os, dotenv, re
 from modules.versionmanager_api import VersionmanagerApi
+from cleantext import clean
+
 
 # Load environment variables
 dotenv.load_dotenv()
@@ -275,6 +277,14 @@ def update_domains_in_directus():
     # Get data from Directus
     cities = pd.DataFrame(api.get_items(collection="City"))
     states = pd.DataFrame(api.get_items(collection="state"))
+    description = pd.read_csv('../data/DE-AI-domains-description.csv')
+
+    # Rename the description url column to description_url
+    description.rename(columns={'url': 'description_url'}, inplace=True)
+
+    # Fix the description column using the cleanup_string_text_characters() function
+    description = description.drop_duplicates(subset=['description_url'])
+    description['description'] = description['description'].apply(clean, lower=False)
 
     # Get system data from versionmanager
     systems = get_systems_df()
@@ -292,7 +302,7 @@ def update_domains_in_directus():
     domain_data = domain_data.merge(cities[['Name', 'city_id']], left_on='cityLabel', right_on='Name', how='left')
 
     domain_data = domain_data.merge(domains[['url', 'domain_id']], left_on='website', right_on='url', how='left')
-
+    domain_data = domain_data.merge(description[['description_url', 'description']], left_on='website', right_on='description_url', how='left')
 
     # Populate the raw_versionmanager with the systems row as json matching that has the 'original_url' the same as the 'website' in domain_data
     #itterate over the rows in domain_data
@@ -312,15 +322,18 @@ def update_domains_in_directus():
     # Clean up the domain_data
     domain_data['url'] = domain_data['website']
     domain_data['status'] = 'published'
-    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id']]
+    domain_data = domain_data[['url', 'city_id', 'state_id', 'status', 'raw_versionmanager', 'domain_id', 'description']]
     domain_data = domain_data.rename(columns={'domain_id': 'id'})
 
-    # Break into 100 item chunks
-    domain_data_chunks = np.array_split(domain_data, len(domain_data) / 100)
+    # Break into 10 item chunks
+    domain_data_chunks = np.array_split(domain_data, len(domain_data) / 10)
 
     for chunk in domain_data_chunks:
-        status = api.update_items(collection="domain", items=chunk.to_dict('records'))
-        print(status.status_code)
+        try :
+            status = api.update_items(collection="domain", items=chunk.to_dict('records'))
+            print(status.status_code)
+        except:
+            print('Error updating domains in Directus.' + str(chunk))
 
     return
 
@@ -330,6 +343,14 @@ def delete_all_items(collection):
                       endpoint=os.getenv('DIRECTUS_URL'))
     api.delete_all_items_from_collection(collection=collection)
     return
+
+def cleanup_string_text_characters(text):
+    # Remove multiple spaces
+    text = re.sub(' +', ' ', text)
+    # Remove characters that might cause a json error
+    text = text.replace('\"', '\'').replace('“', '\'').replace('”', '\'').replace('’', '\'').replace('‘', '\'')
+    return text
+
 
 if __name__ == '__main__':
     # Measuring time
