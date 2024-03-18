@@ -1,0 +1,42 @@
+@startuml
+' convert it with additional command line argument -DRELATIVE_INCLUDE="./.." to use locally
+!if %variable_exists("RELATIVE_INCLUDE")
+  !include %get_variable_value("RELATIVE_INCLUDE")/C4_Container.puml
+!else
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!endif
+
+SHOW_PERSON_OUTLINE()
+' Tags support no spaces in the name (based on the underlining stereotypes, which don't support spaces anymore). 
+' If spaces are requested in the legend, legend text with space has to be defined
+AddElementTag("backendContainer", $fontColor=$ELEMENT_FONT_COLOR, $bgColor="#335DA5", $shape=EightSidedShape(), $legendText="backend container (eight sided)")
+AddRelTag("async", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DashedLine())
+AddRelTag("sync", $textColor=$ARROW_FONT_COLOR, $lineColor=$ARROW_COLOR, $lineStyle=DottedLine())
+
+
+title Container diagram for public sectore knowledge database
+
+Person(citizen, Citizen, "A tax paying citizen, who wants to know how tax money is spend on web-based systems")
+
+System_Boundary(c1, "Follow the Money") {
+    Container(data_scraper, "Data scraper", "Python", "Scraps web pages and enriches it with additional information", $tags="backendContainer")
+    Container(page_summarizer, "Data Summarizer AI/LLM", "Python, Ollama", "Extract contant information from web pages", $tags="backendContainer")
+    Container(cms, "CMS", "Directus", "Data platform")
+    ContainerDb(database, "Database", "SQL Database", "Persists web page meta data and software information")
+    Container(frontend, "Frontend Application", "React", "Provides Internet banking functionality via API")
+}
+
+System_Ext(web_analyzing_service, "Webpage Analyzing Service", "The CMS Analyzing Service Versionmanager.io")
+
+Rel(citizen, frontend, "Uses", "HTTPS")
+
+Rel(data_scraper, cms, "Delivers", "sync, JSON/HTTPS", $tags="sync")
+Rel(frontend, cms, "Uses", "sync, JSON/HTTPS", $tags="sync")
+Rel_Back_Neighbor(database, cms, "Reads from and writes to", "sync, JDBC", $tags="sync")
+
+Rel_Back_Neighbor(data_scraper, page_summarizer, "Enriches webside content summery using", "async, LPC", $tags="async")
+Rel_Back_Neighbor(data_scraper, web_analyzing_service, "Enriches webpage software information using", "sync, JSON/HTTPS", $tags="sync" )
+
+SHOW_LEGEND()
+footer drawn with PlantUML v. %version() and C4-PlantUML v. C4Version()
+@enduml
