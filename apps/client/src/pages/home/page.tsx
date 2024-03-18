@@ -56,7 +56,7 @@ export default function Homepage() {
       .filter((w) => !!w.versionmanager?.system_type_group)
       .reduce(
         ([open, closed], pre) => {
-          if (pre.versionmanager?.system_type_group?.is_open_source) {
+          if (!pre.versionmanager?.system_type_group?.is_open_source) {
             return [
               open,
               {
