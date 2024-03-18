@@ -1,0 +1,9 @@
+beautifulsoup4==4.12.3
+cleantext==1.1.4
+directus_python_client==1.0.5
+numpy==1.25.2
+ollama==0.1.7
+pandas==2.0.3
+python-dotenv==1.0.1
+Requests==2.31.0
+tqdm==4.66.1
